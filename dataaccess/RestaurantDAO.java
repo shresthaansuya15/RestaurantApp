@@ -6,7 +6,7 @@ import java.util.*;
 
 public class RestaurantDAO 
 {
-    private String filePath = "data/restaurants.txt";
+    private String filePath = "data/restaurant.txt";
 
     public List<Restaurant> getAllRestaurants() 
     {

@@ -29,7 +29,7 @@ public class LoginFrame extends JFrame
         // Title
         JLabel title = new JLabel("Good food deserves good reviews");
         title.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
-        title.setForeground(Color.WHITE);
+        title.setForeground(Color.BLACK);
         title.setBounds(30, 30, 350, 30);
         bgLabel.add(title);
 

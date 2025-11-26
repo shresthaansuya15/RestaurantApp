@@ -32,12 +32,12 @@ public class MainFrame extends JFrame
         // Welcome label
         JLabel welcomeLabel = new JLabel("Hi, " + username + "! What are you craving today?");
         welcomeLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-        welcomeLabel.setForeground(Color.WHITE);
+        welcomeLabel.setForeground(Color.BLACK);
         welcomeLabel.setBounds(50, 30, 700, 40);
         bgLabel.add(welcomeLabel);
 
         // Cuisine buttons
-        String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "Pizza", "American", "Sandwich"};
+        String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "American", "Japanese", "Vietnamese", "French", "Mediterranean", "Vegetarian", "Asian"};
         int x = 50, y = 100;
         for (String cuisine : cuisines) 
         {
