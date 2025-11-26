@@ -54,27 +54,81 @@ public class MainFrame extends JFrame
                 System.out.println("Image not found for " + cuisine); 
             } 
             
-            // Create button with icon and text 
+            // Create button 
             JButton btn = new JButton(cuisine, icon); 
-            btn.setHorizontalTextPosition(SwingConstants.CENTER); // text below icon 
+            btn.setHorizontalTextPosition(SwingConstants.CENTER); 
             btn.setVerticalTextPosition(SwingConstants.BOTTOM); 
-            btn.setBounds(x, y, 120, 80); // adjust height for image 
-            btn.setBackground(Color.PINK); 
+            btn.setBounds(x, y, 120, 80); 
+            btn.setBackground(new Color(255, 182, 193, 200)); 
             btn.setForeground(Color.BLACK); 
-            btn.setFocusPainted(false); // Click event to filter restaurants 
-            btn.addActionListener(new ActionListener() 
+            btn.setFocusPainted(false); 
+            btn.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
+
+            // Hover zoom effect
+            final Rectangle originalBounds = btn.getBounds();
+            final int targetWidth = (int)(originalBounds.width * 1.2);
+            final int targetHeight = (int)(originalBounds.height * 1.2);
+
+            Timer growTimer = new Timer(10, null);
+            Timer shrinkTimer = new Timer(10, null);
+
+            btn.addMouseListener(new MouseAdapter() 
             { 
-                public void actionPerformed(ActionEvent e) 
-                { 
-                    showRestaurants(cuisine); 
-                } 
-            }); 
+                @Override
+                public void mouseEntered(MouseEvent e) 
+                {
+                    shrinkTimer.stop();
+                    btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    btn.setBackground(new Color(255, 105, 180)); // darker pink
+                    btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+
+                    growTimer.addActionListener(ev -> {
+                        Rectangle b = btn.getBounds();
+                        if (b.width < targetWidth) {
+                            int newWidth = Math.min(b.width + 2, targetWidth);
+                            int newHeight = Math.min(b.height + 2, targetHeight);
+                            int newX = b.x - 1; // center
+                            int newY = b.y - 1;
+                            btn.setBounds(newX, newY, newWidth, newHeight);
+                        } else {
+                            growTimer.stop();
+                        }
+                    });
+                    growTimer.start();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) 
+                {
+                    growTimer.stop();
+                    btn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                    btn.setBackground(new Color(255, 182, 193, 200));
+                    btn.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
+
+                    shrinkTimer.addActionListener(ev -> {
+                        Rectangle b = btn.getBounds();
+                        if (b.width > originalBounds.width) {
+                            int newWidth = Math.max(b.width - 2, originalBounds.width);
+                            int newHeight = Math.max(b.height - 2, originalBounds.height);
+                            int newX = b.x + 1;
+                            int newY = b.y + 1;
+                            btn.setBounds(newX, newY, newWidth, newHeight);
+                        } else {
+                            shrinkTimer.stop();
+                        }
+                    });
+                    shrinkTimer.start();
+                }
+            });
+
+            // Click event
+            btn.addActionListener(e -> showRestaurants(cuisine)); 
             bgLabel.add(btn); 
             x += 140; 
             if (x > 700) 
             { 
                 x = 50; 
-                y += 100; // move to next row 
+                y += 100; 
             } 
         } 
         add(panel); 
