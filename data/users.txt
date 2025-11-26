@@ -1,0 +1,16 @@
+Username|Password|FullName|Email
+john_doe|password123|John Doe|john@example.com
+jane_smith|qwerty456|Jane Smith|jane@example.com
+alice_w|alice2025|Alice Williams|alicew@example.com
+bob_k|bobsecure|Bob Kumar|bobk@example.com
+charlie_m|charlie321|Charlie Martin|charlie@example.com
+emily_r|emilypass|Emily Roberts|emilyr@example.com
+david_s|david2024|David Singh|davids@example.com
+lisa_t|lisa789|Lisa Taylor|lisa@example.com
+michael_b|mike2025|Michael Brown|michaelb@example.com
+sarah_j|sarah123|Sarah Johnson|sarahj@example.com
+kevin_l|kevin456|Kevin Lee|kevinl@example.com
+olivia_p|olivia987|Olivia Parker|oliviap@example.com
+ryan_h|ryan321|Ryan Harris|ryanh@example.com
+chloe_m|chloe2025|Chloe Martinez|chloem@example.com
+ansuya_s|ansuya2025|Ansuya Shrestha|ansuya@example.com

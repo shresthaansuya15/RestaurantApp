@@ -1,0 +1,51 @@
+id|name|address|phone|email|hours|cuisines|diningType|priceRange
+R001|Cafe Delight|123 Main St, Milwaukee|414-555-1010|cafedelight@email.com|8am-8pm|American|Casual Dining|$$
+R002|Sushi World|456 Water St, Milwaukee|414-555-1020|sushiworld@email.com|11am-10pm|Japanese|Fine Dining|$$$
+R003|Pizza Palace|789 Broadway, Waukesha|262-555-1030|pizzapalace@email.com|10am-11pm|Italian|Fast Casual|$$
+R004|Taco Town|101 State St, Milwaukee|414-555-1040|tacotown@email.com|9am-9pm|Mexican|Fast Food|$
+R005|Burger Hub|202 Center St, Waukesha|262-555-1050|burgerhub@email.com|10am-10pm|American|Fast Casual|$$
+R006|Pasta House|303 Oak St, Milwaukee|414-555-1060|pastahouse@email.com|11am-10pm|Italian|Casual Dining|$$
+R007|Curry Corner|404 Pine St, Milwaukee|414-555-1070|currycorner@email.com|10am-9pm|Indian|Casual Dining|$$
+R008|Dragon Wok|505 Maple Ave, Waukesha|262-555-1080|dragonwok@email.com|11am-10pm|Chinese|Casual Dining|$$
+R009|Bagel Bros|606 Elm St, Milwaukee|414-555-1090|bagelbros@email.com|7am-3pm|American|Fast Food|$
+R010|Sandwich Spot|707 Cedar St, Waukesha|262-555-1100|sandwichspot@email.com|8am-8pm|American|Fast Casual|$$
+R011|Pho Palace|808 Walnut St, Milwaukee|414-555-1110|phopalace@email.com|10am-9pm|Vietnamese|Casual Dining|$$
+R012|Crepe Cafe|909 Birch St, Milwaukee|414-555-1120|crepecafe@email.com|9am-8pm|French|Casual Dining|$$
+R013|Wing World|111 Oakwood Ave, Waukesha|262-555-1130|wingworld@email.com|11am-11pm|American|Fast Food|$
+R014|Ramen House|222 Pinewood Dr, Milwaukee|414-555-1140|ramenhouse@email.com|11am-10pm|Japanese|Casual Dining|$$
+R015|Steak Station|333 Maplewood St, Milwaukee|414-555-1150|steakstation@email.com|12pm-10pm|American|Fine Dining|$$$
+R016|Mediterraneo|444 Elmwood Ave, Waukesha|262-555-1160|mediterraneo@email.com|11am-10pm|Mediterranean|Casual Dining|$$
+R017|Veggie Delight|555 Cedarwood Dr, Milwaukee|414-555-1170|veggiedelight@email.com|9am-9pm|Vegetarian|Casual Dining|$$
+R018|BBQ Barn|666 Birchwood St, Waukesha|262-555-1180|bbqbarn@email.com|11am-10pm|American|Casual Dining|$$
+R019|Dumpling Den|777 Walnutwood Ave, Milwaukee|414-555-1190|dumplingden@email.com|10am-9pm|Chinese|Casual Dining|$$
+R020|Bagel & Brew|888 Oakwood Dr, Milwaukee|414-555-1200|bagelbrew@email.com|7am-3pm|American|Fast Food|$
+R021|Pizza Planet|1010 Pinewood St, Waukesha|262-555-1210|pizzaplanet@email.com|10am-11pm|Italian|Fast Casual|$$
+R022|Noodle Nest|1111 Maple St, Milwaukee|414-555-1220|noodlenest@email.com|11am-9pm|Asian|Casual Dining|$$
+R023|Taco Fiesta|1212 Elm St, Milwaukee|414-555-1230|tacofiesta@email.com|9am-9pm|Mexican|Fast Food|$
+R024|Burger Palace|1313 Cedar St, Waukesha|262-555-1240|burgerpalace@email.com|10am-10pm|American|Fast Casual|$$
+R025|Pasta Point|1414 Birch St, Milwaukee|414-555-1250|pastapoint@email.com|11am-10pm|Italian|Casual Dining|$$
+R026|Curry House|1515 Walnut St, Milwaukee|414-555-1260|curryhouse@email.com|10am-9pm|Indian|Casual Dining|$$
+R027|Dragon Express|1616 Oak St, Waukesha|262-555-1270|dragonexpress@email.com|11am-10pm|Chinese|Fast Food|$
+R028|Bagel Hut|1717 Pine St, Milwaukee|414-555-1280|bagelhut@email.com|7am-3pm|American|Fast Food|$
+R029|Sandwich Central|1818 Maple Ave, Waukesha|262-555-1290|sandwichcentral@email.com|8am-8pm|American|Fast Casual|$$
+R030|Pho Express|1919 Elmwood St, Milwaukee|414-555-1300|phoexpress@email.com|10am-9pm|Vietnamese|Casual Dining|$$
+R031|Crepe Corner|2020 Cedarwood Dr, Milwaukee|414-555-1310|crepecorner@email.com|9am-8pm|French|Casual Dining|$$
+R032|Wing Stop|2121 Birchwood St, Waukesha|262-555-1320|wingstop@email.com|11am-11pm|American|Fast Food|$
+R033|Ramen Express|2222 Walnutwood Ave, Milwaukee|414-555-1330|ramenexpress@email.com|11am-10pm|Japanese|Casual Dining|$$
+R034|Steak House|2323 Oakwood Dr, Milwaukee|414-555-1340|steakhouse@email.com|12pm-10pm|American|Fine Dining|$$$
+R035|Mediterranean Grill|2424 Pinewood St, Waukesha|262-555-1350|mediterraneangrill@email.com|11am-10pm|Mediterranean|Casual Dining|$$
+R036|Veggie Garden|2525 Maple St, Milwaukee|414-555-1360|veggiegarden@email.com|9am-9pm|Vegetarian|Casual Dining|$$
+R037|BBQ Express|2626 Elm St, Waukesha|262-555-1370|bbqexpress@email.com|11am-10pm|American|Fast Food|$
+R038|Dumpling House|2727 Cedar St, Milwaukee|414-555-1380|dumplinghouse@email.com|10am-9pm|Chinese|Casual Dining|$$
+R039|Bagel Corner|2828 Birchwood Ave, Milwaukee|414-555-1390|bagelcorner@email.com|7am-3pm|American|Fast Food|$
+R040|Pizza Hub|2929 Walnut St, Waukesha|262-555-1400|pizzahub@email.com|10am-11pm|Italian|Fast Casual|$$
+R041|Noodle House|3030 Oakwood Dr, Milwaukee|414-555-1410|noodlehouse@email.com|11am-9pm|Asian|Casual Dining|$$
+R042|Taco Express|3131 Pinewood St, Milwaukee|414-555-1420|tacoexpress@email.com|9am-9pm|Mexican|Fast Food|$
+R043|Burger Express|3232 Maple St, Waukesha|262-555-1430|burgerexpress@email.com|10am-10pm|American|Fast Casual|$$
+R044|Pasta Express|3333 Elm St, Milwaukee|414-555-1440|pastaexpress@email.com|11am-10pm|Italian|Casual Dining|$$
+R045|Curry Express|3434 Cedar St, Milwaukee|414-555-1450|curryexpress@email.com|10am-9pm|Indian|Casual Dining|$$
+R046|Dragon Palace|3535 Birch St, Waukesha|262-555-1460|dragonpalace@email.com|11am-10pm|Chinese|Fine Dining|$$$
+R047|Bagel World|3636 Walnutwood Ave, Milwaukee|414-555-1470|bagelworld@email.com|7am-3pm|American|Fast Food|$
+R048|Sandwich Express|3737 Oakwood Dr, Waukesha|262-555-1480|sandwichexpress@email.com|8am-8pm|American|Fast Casual|$$
+R049|Pho House|3838 Pinewood St, Milwaukee|414-555-1490|phohouse@email.com|10am-9pm|Vietnamese|Casual Dining|$$
+R050|Crepe World|3939 Maple St, Milwaukee|414-555-1500|crepeworld@email.com|9am-8pm|French|Casual Dining|$$

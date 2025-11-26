@@ -1,0 +1,300 @@
+id|restaurantId|name|price
+F001|R001|Cheeseburger|8.50
+F002|R001|Veggie Burger|7.50
+F003|R001|Fries|3.00
+F004|R001|Milkshake|4.50
+F005|R001|Salad|6.00
+
+F006|R002|California Roll|12.00
+F007|R002|Spicy Tuna Roll|13.00
+F008|R002|Miso Soup|4.50
+F009|R002|Tempura|10.00
+F010|R002|Sashimi Platter|18.00
+
+F011|R003|Margherita Pizza|10.00
+F012|R003|Pepperoni Pizza|11.50
+F013|R003|Veggie Pizza|10.50
+F014|R003|Garlic Bread|4.00
+F015|R003|Caesar Salad|6.50
+
+F016|R004|Chicken Taco|3.50
+F017|R004|Beef Taco|3.75
+F018|R004|Guacamole|4.50
+F019|R004|Churros|3.00
+F020|R004|Nachos|5.00
+
+F021|R005|Classic Burger|8.50
+F022|R005|Cheese Fries|4.00
+F023|R005|Onion Rings|3.50
+F024|R005|Soft Drink|2.00
+F025|R005|Chocolate Shake|4.50
+
+F026|R006|Spaghetti|9.50
+F027|R006|Fettuccine Alfredo|10.50
+F028|R006|Lasagna|11.00
+F029|R006|Garlic Bread|4.00
+F030|R006|Caesar Salad|6.50
+
+F031|R007|Chicken Curry|9.00
+F032|R007|Paneer Butter Masala|8.50
+F033|R007|Naan|2.50
+F034|R007|Basmati Rice|3.00
+F035|R007|Gulab Jamun|4.00
+
+F036|R008|Kung Pao Chicken|10.00
+F037|R008|Sweet and Sour Pork|9.50
+F038|R008|Fried Rice|7.00
+F039|R008|Spring Rolls|4.50
+F040|R008|Hot and Sour Soup|3.50
+
+F041|R009|Bagel with Cream Cheese|3.50
+F042|R009|Everything Bagel|3.75
+F043|R009|Coffee|2.50
+F044|R009|Orange Juice|3.00
+F045|R009|Muffin|2.75
+
+F046|R010|Turkey Sandwich|7.50
+F047|R010|Ham & Cheese|7.00
+F048|R010|Club Sandwich|8.00
+F049|R010|Chips|2.50
+F050|R010|Soda|2.00
+
+F051|R011|Pho Beef|9.50
+F052|R011|Pho Chicken|9.00
+F053|R011|Spring Rolls|4.50
+F054|R011|Banh Mi|6.50
+F055|R011|Iced Tea|2.50
+
+F056|R012|Nutella Crepe|5.50
+F057|R012|Strawberry Crepe|5.00
+F058|R012|Ham & Cheese Crepe|6.50
+F059|R012|Coffee|3.00
+F060|R012|Hot Chocolate|3.50
+
+F061|R013|Buffalo Wings|8.00
+F062|R013|BBQ Wings|8.50
+F063|R013|Fries|3.00
+F064|R013|Celery Sticks|2.50
+F065|R013|Ranch Dip|1.50
+
+F066|R014|Shoyu Ramen|10.00
+F067|R014|Miso Ramen|10.50
+F068|R014|Tonkotsu Ramen|11.00
+F069|R014|Gyoza|5.00
+F070|R014|Matcha Ice Cream|4.00
+
+F071|R015|Ribeye Steak|18.00
+F072|R015|Filet Mignon|22.00
+F073|R015|Caesar Salad|6.50
+F074|R015|Mashed Potatoes|4.50
+F075|R015|Chocolate Lava Cake|7.00
+
+F076|R016|Hummus Plate|6.50
+F077|R016|Falafel|7.50
+F078|R016|Greek Salad|8.00
+F079|R016|Lamb Kebab|12.00
+F080|R016|Baklava|4.50
+
+F081|R017|Veggie Burger|7.50
+F082|R017|Grilled Veggie Sandwich|6.50
+F083|R017|Quinoa Salad|7.00
+F084|R017|Smoothie|4.50
+F085|R017|Fruit Bowl|5.00
+
+F086|R018|Pulled Pork|10.00
+F087|R018|BBQ Ribs|12.00
+F088|R018|Cornbread|3.50
+F089|R018|Coleslaw|3.00
+F090|R018|Sweet Tea|2.50
+
+F091|R019|Pork Dumplings|5.50
+F092|R019|Chicken Dumplings|5.50
+F093|R019|Vegetable Dumplings|5.00
+F094|R019|Fried Rice|7.00
+F095|R019|Hot Tea|2.50
+
+F096|R020|Bagel with Lox|4.50
+F097|R020|Plain Bagel|3.00
+F098|R020|Coffee|2.50
+F099|R020|Orange Juice|3.00
+F100|R020|Muffin|2.75
+
+F101|R021|Margherita Pizza|10.00
+F102|R021|Pepperoni Pizza|11.50
+F103|R021|BBQ Chicken Pizza|12.00
+F104|R021|Garlic Bread|4.00
+F105|R021|Caesar Salad|6.50
+
+F106|R022|Pad Thai|10.00
+F107|R022|Fried Noodles|9.50
+F108|R022|Spring Rolls|4.50
+F109|R022|Tom Yum Soup|5.00
+F110|R022|Mango Sticky Rice|6.00
+
+F111|R023|Chicken Taco|3.50
+F112|R023|Beef Taco|3.75
+F113|R023|Guacamole|4.50
+F114|R023|Nachos|5.00
+F115|R023|Churros|3.00
+
+F116|R024|Classic Burger|8.50
+F117|R024|Cheese Fries|4.00
+F118|R024|Onion Rings|3.50
+F119|R024|Soda|2.00
+F120|R024|Milkshake|4.50
+
+F121|R025|Spaghetti|9.50
+F122|R025|Fettuccine Alfredo|10.50
+F123|R025|Lasagna|11.00
+F124|R025|Garlic Bread|4.00
+F125|R025|Caesar Salad|6.50
+
+F126|R026|Chicken Curry|9.00
+F127|R026|Paneer Butter Masala|8.50
+F128|R026|Naan|2.50
+F129|R026|Basmati Rice|3.00
+F130|R026|Gulab Jamun|4.00
+
+F131|R027|Kung Pao Chicken|10.00
+F132|R027|Sweet and Sour Pork|9.50
+F133|R027|Fried Rice|7.00
+F134|R027|Spring Rolls|4.50
+F135|R027|Hot and Sour Soup|3.50
+
+F136|R028|Bagel with Cream Cheese|3.50
+F137|R028|Everything Bagel|3.75
+F138|R028|Coffee|2.50
+F139|R028|Orange Juice|3.00
+F140|R028|Muffin|2.75
+
+F141|R029|Turkey Sandwich|7.50
+F142|R029|Ham & Cheese|7.00
+F143|R029|Club Sandwich|8.00
+F144|R029|Chips|2.50
+F145|R029|Soda|2.00
+
+F146|R030|Pho Beef|9.50
+F147|R030|Pho Chicken|9.00
+F148|R030|Spring Rolls|4.50
+F149|R030|Banh Mi|6.50
+F150|R030|Iced Tea|2.50
+
+F151|R031|Nutella Crepe|5.50
+F152|R031|Strawberry Crepe|5.00
+F153|R031|Ham & Cheese Crepe|6.50
+F154|R031|Coffee|3.00
+F155|R031|Hot Chocolate|3.50
+
+F156|R032|Buffalo Wings|8.00
+F157|R032|BBQ Wings|8.50
+F158|R032|Fries|3.00
+F159|R032|Celery Sticks|2.50
+F160|R032|Ranch Dip|1.50
+
+F161|R033|Shoyu Ramen|10.00
+F162|R033|Miso Ramen|10.50
+F163|R033|Tonkotsu Ramen|11.00
+F164|R033|Gyoza|5.00
+F165|R033|Matcha Ice Cream|4.00
+
+F166|R034|Ribeye Steak|18.00
+F167|R034|Filet Mignon|22.00
+F168|R034|Caesar Salad|6.50
+F169|R034|Mashed Potatoes|4.50
+F170|R034|Chocolate Lava Cake|7.00
+
+F171|R035|Hummus Plate|6.50
+F172|R035|Falafel|7.50
+F173|R035|Greek Salad|8.00
+F174|R035|Lamb Kebab|12.00
+F175|R035|Baklava|4.50
+
+F176|R036|Veggie Burger|7.50
+F177|R036|Grilled Veggie Sandwich|6.50
+F178|R036|Quinoa Salad|7.00
+F179|R036|Smoothie|4.50
+F180|R036|Fruit Bowl|5.00
+
+F181|R037|Pulled Pork|10.00
+F182|R037|BBQ Ribs|12.00
+F183|R037|Cornbread|3.50
+F184|R037|Coleslaw|3.00
+F185|R037|Sweet Tea|2.50
+
+F186|R038|Pork Dumplings|5.50
+F187|R038|Chicken Dumplings|5.50
+F188|R038|Vegetable Dumplings|5.00
+F189|R038|Fried Rice|7.00
+F190|R038|Hot Tea|2.50
+
+F191|R039|Bagel with Lox|4.50
+F192|R039|Plain Bagel|3.00
+F193|R039|Coffee|2.50
+F194|R039|Orange Juice|3.00
+F195|R039|Muffin|2.75
+
+F196|R040|Margherita Pizza|10.00
+F197|R040|Pepperoni Pizza|11.50
+F198|R040|BBQ Chicken Pizza|12.00
+F199|R040|Garlic Bread|4.00
+F200|R040|Caesar Salad|6.50
+
+F201|R041|Pad Thai|10.00
+F202|R041|Fried Noodles|9.50
+F203|R041|Spring Rolls|4.50
+F204|R041|Tom Yum Soup|5.00
+F205|R041|Mango Sticky Rice|6.00
+
+F206|R042|Chicken Taco|3.50
+F207|R042|Beef Taco|3.75
+F208|R042|Guacamole|4.50
+F209|R042|Nachos|5.00
+F210|R042|Churros|3.00
+
+F211|R043|Classic Burger|8.50
+F212|R043|Cheese Fries|4.00
+F213|R043|Onion Rings|3.50
+F214|R043|Soda|2.00
+F215|R043|Milkshake|4.50
+
+F216|R044|Spaghetti|9.50
+F217|R044|Fettuccine Alfredo|10.50
+F218|R044|Lasagna|11.00
+F219|R044|Garlic Bread|4.00
+F220|R044|Caesar Salad|6.50
+
+F221|R045|Chicken Curry|9.00
+F222|R045|Paneer Butter Masala|8.50
+F223|R045|Naan|2.50
+F224|R045|Basmati Rice|3.00
+F225|R045|Gulab Jamun|4.00
+
+F226|R046|Kung Pao Chicken|10.00
+F227|R046|Sweet and Sour Pork|9.50
+F228|R046|Fried Rice|7.00
+F229|R046|Spring Rolls|4.50
+F230|R046|Hot and Sour Soup|3.50
+
+F231|R047|Bagel with Cream Cheese|3.50
+F232|R047|Everything Bagel|3.75
+F233|R047|Coffee|2.50
+F234|R047|Orange Juice|3.00
+F235|R047|Muffin|2.75
+
+F236|R048|Turkey Sandwich|7.50
+F237|R048|Ham & Cheese|7.00
+F238|R048|Club Sandwich|8.00
+F239|R048|Chips|2.50
+F240|R048|Soda|2.00
+
+F241|R049|Pho Beef|9.50
+F242|R049|Pho Chicken|9.00
+F243|R049|Spring Rolls|4.50
+F244|R049|Banh Mi|6.50
+F245|R049|Iced Tea|2.50
+
+F246|R050|Nutella Crepe|5.50
+F247|R050|Strawberry Crepe|5.00
+F248|R050|Ham & Cheese Crepe|6.50
+F249|R050|Coffee|3.00
+F250|R050|Hot Chocolate|3.50

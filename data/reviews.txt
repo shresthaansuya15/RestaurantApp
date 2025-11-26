@@ -1,0 +1,16 @@
+ReviewID|RestaurantID|Username|Rating|Comment
+REV001|R001|john_doe|5|Loved the cheeseburger and fries!
+REV002|R002|jane_smith|4|Sushi was fresh, but a bit pricey.
+REV003|R003|alice_w|3|Pizza was okay, could use more toppings.
+REV004|R004|bob_k|4|Tacos were tasty and spicy!
+REV005|R005|charlie_m|5|Best burgers in town, highly recommend.
+REV006|R006|emily_r|4|Pasta was delicious, nice ambiance.
+REV007|R007|david_s|5|Chicken curry was perfect, naan was soft.
+REV008|R008|lisa_t|3|Sweet and sour pork was a bit too sweet.
+REV009|R009|michael_b|4|Bagels were fresh, coffee was hot.
+REV010|R010|sarah_j|5|Club sandwich was excellent, will return.
+REV011|R011|kevin_l|4|Pho beef was flavorful, spring rolls were good.
+REV012|R012|olivia_p|5|Crepes were amazing, coffee was perfect.
+REV013|R013|ryan_h|4|Buffalo wings were spicy, fries were great.
+REV014|R014|chloe_m|5|Ramen was very tasty, gyoza was a nice side.
+REV015|R015|ansuya_s|5|Steak was perfectly cooked, dessert was amazing.
