@@ -27,55 +27,60 @@ public class LoginFrame extends JFrame
         panel.add(bgLabel);
 
         // Title
-        JLabel title = new JLabel("Good food deserves good reviews");
-        title.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+        JLabel title = new JLabel("Good food deserves good reviews", SwingConstants.CENTER);
+        title.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
         title.setForeground(Color.BLACK);
-        title.setBounds(30, 30, 350, 30);
+        title.setBounds(50, 30, 300, 30); // width can be adjusted
         bgLabel.add(title);
 
-        // Username label and field
+        // Restaurant icon under title, bigger and centered
+        int iconSize = 120;
+        JLabel restaurantIcon = new JLabel(scaleIcon("/resources/icons/restaurant.png", iconSize, iconSize));
+        int iconX = (400 - iconSize) / 2; // center in 400px wide frame
+        restaurantIcon.setBounds(iconX, 70, iconSize, iconSize);
+        bgLabel.add(restaurantIcon);
+
+        // Username label and field (shifted down)
         JLabel userLabel = new JLabel("Username:");
-        userLabel.setBounds(50, 100, 100, 25);
+        userLabel.setBounds(50, 230, 100, 25);
         bgLabel.add(userLabel);
 
         userText = new JTextField(20);
-        userText.setBounds(150, 100, 165, 25);
+        userText.setBounds(150, 230, 165, 25);
         bgLabel.add(userText);
 
-        // Username icon, scaled to 32x32
+        // Username icon
         JLabel userIcon = new JLabel(scaleIcon("/resources/icons/user_login.png", 32, 32));
-        userIcon.setBounds(320, 100, 32, 32);
+        userIcon.setBounds(320, 230, 32, 32);
         bgLabel.add(userIcon);
 
-        // Password label and field
+        // Password label and field (shifted down)
         JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setBounds(50, 150, 100, 25);
+        passwordLabel.setBounds(50, 280, 100, 25);
         bgLabel.add(passwordLabel);
 
         passwordText = new JPasswordField(20);
-        passwordText.setBounds(150, 150, 165, 25);
+        passwordText.setBounds(150, 280, 165, 25);
         bgLabel.add(passwordText);
 
-        // Password icon, scaled to 32x32
+        // Password icon
         JLabel passIcon = new JLabel(scaleIcon("/resources/icons/login_password.png", 32, 32));
-        passIcon.setBounds(320, 150, 32, 32);
+        passIcon.setBounds(320, 280, 32, 32);
         bgLabel.add(passIcon);
 
-        // Login button
+        // Buttons
         JButton loginButton = new JButton("Login");
-        loginButton.setBounds(150, 200, 100, 30);
+        loginButton.setBounds(150, 325, 100, 30);
         loginButton.setBackground(Color.PINK);
         bgLabel.add(loginButton);
 
-        // New user button
         JButton registerButton = new JButton("New User? Create Account");
-        registerButton.setBounds(100, 250, 200, 30);
+        registerButton.setBounds(100, 365, 200, 30);
         registerButton.setBackground(Color.PINK);
         bgLabel.add(registerButton);
 
-        // Forgot password button
         JButton forgotButton = new JButton("Forgot Password");
-        forgotButton.setBounds(120, 300, 150, 30);
+        forgotButton.setBounds(120, 405, 150, 30);
         forgotButton.setBackground(Color.PINK);
         bgLabel.add(forgotButton);
 

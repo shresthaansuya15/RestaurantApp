@@ -144,6 +144,7 @@ public class MainFrame extends JFrame
         frame.setLocationRelativeTo(this); 
         JPanel panel = new JPanel(); 
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); 
+
         for (Restaurant r : list) 
         { 
             JPanel rPanel = new JPanel(); 
@@ -152,13 +153,21 @@ public class MainFrame extends JFrame
 
             JLabel nameLabel = new JLabel(r.getName() + " (" + r.getDiningType() + ")"); 
             JLabel addressLabel = new JLabel("Address: " + r.getAddress()); 
+
+            // Add rating
+            JLabel ratingLabel = new JLabel("Rating: " + r.getRating() + " ★"); 
+            ratingLabel.setForeground(Color.ORANGE);
+            ratingLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
             rPanel.add(nameLabel); 
             rPanel.add(addressLabel); 
-            
+            rPanel.add(ratingLabel); 
+        
             JButton detailsBtn = new JButton("View Details"); 
             rPanel.add(detailsBtn); 
             panel.add(rPanel); 
         } 
+
         JScrollPane scrollPane = new JScrollPane(panel); 
         frame.add(scrollPane); 
         frame.setVisible(true); 

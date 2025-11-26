@@ -21,7 +21,7 @@ public class RestaurantDAO
 
                 String[] parts = line.split("\\|");
 
-                if (parts.length < 9) continue;
+                if (parts.length < 10) continue;
 
                 String id = parts[0];
                 String name = parts[1];
@@ -32,8 +32,17 @@ public class RestaurantDAO
                 List<String> cuisines = Arrays.asList(parts[6].split(","));
                 String diningType = parts[7];
                 String priceRange = parts[8];
+                double rating = 0.0;
+                try 
+                {
+                    rating = Double.parseDouble(parts[9]);
+                } 
+                catch (NumberFormatException e) 
+                {
+                    rating = 0.0; // default if missing or invalid
+                }
 
-                restaurants.add(new Restaurant(id, name, address, phone, email, hours, cuisines, diningType, priceRange));
+                restaurants.add(new Restaurant(id, name, address, phone, email, hours, cuisines, diningType, priceRange, rating));
             }
         } 
         catch (IOException e) 

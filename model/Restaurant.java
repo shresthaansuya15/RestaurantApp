@@ -13,9 +13,10 @@ public class Restaurant
     private List<String> cuisines;
     private String diningType;
     private String priceRange;
+    private double rating;
 
     public Restaurant(String id, String name, String address, String phone, String email,
-                      String hours, List<String> cuisines, String diningType, String priceRange) 
+                      String hours, List<String> cuisines, String diningType, String priceRange, double rating) 
     {
         this.id = id;
         this.name = name;
@@ -26,6 +27,7 @@ public class Restaurant
         this.cuisines = cuisines;
         this.diningType = diningType;
         this.priceRange = priceRange;
+        this.rating = rating;
     }
 
     // Getters
@@ -72,5 +74,10 @@ public class Restaurant
     public String getPriceRange() 
     { 
         return priceRange; 
+    }
+
+    public double getRating() 
+    { 
+        return rating; 
     }
 }
