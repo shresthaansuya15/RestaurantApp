@@ -34,4 +34,17 @@ public class UserDAO
         
         return users;
     }
+
+    // Add this method for login validation 
+    public boolean validateUser(String username, String password) 
+    { 
+        for (User u : getAllUsers()) 
+        { 
+            if (u.getUsername().equals(username) && u.getPassword().equals(password)) 
+            { 
+                return true; 
+            }
+        } 
+        return false; 
+    }
 }

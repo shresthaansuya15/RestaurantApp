@@ -42,4 +42,22 @@ public class RestaurantDAO
         }
         return restaurants;
     }
+
+    // New method to filter restaurants by cuisine
+    public List<Restaurant> getRestaurantsByCuisine(String cuisine) 
+    {   
+        List<Restaurant> filtered = new ArrayList<>();
+        for (Restaurant r : getAllRestaurants()) 
+        {
+            for (String c : r.getCuisines()) 
+            {
+                if (c.trim().equalsIgnoreCase(cuisine)) 
+                {
+                    filtered.add(r);
+                    break;
+                }
+            }
+        }
+        return filtered;
+    }
 }
