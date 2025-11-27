@@ -1,96 +1,96 @@
-import dataaccess.*; 
-import model.*; 
-import javax.swing.*; 
-import java.awt.*; 
-import java.awt.event.*; 
-import java.util.List; 
+import dataaccess.*;
+import model.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.Timer;
 
 public class MainFrame extends JFrame 
-{ 
-    private RestaurantDAO restaurantDAO; 
-    
+{
+    private RestaurantDAO restaurantDAO;
+
     public MainFrame(String username) 
-    { 
-        setTitle("Restaurant Advisor"); 
-        setSize(800, 600); 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        setLocationRelativeTo(null); 
-        setResizable(false); 
+    {
+        setTitle("Restaurant Advisor");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
 
-        restaurantDAO = new RestaurantDAO(); // handles reading restaurants.txt 
+        restaurantDAO = new RestaurantDAO();
 
-        // Main panel 
-        JPanel panel = new JPanel(); 
-        panel.setLayout(null); 
-        panel.setBackground(new Color(255, 182, 193)); // pastel pink 
+        // Main panel
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(new Color(255, 182, 193));
 
-        // Background image 
-        JLabel bgLabel = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png"))); 
-        bgLabel.setBounds(0, 0, 800, 600); 
-        panel.add(bgLabel); 
-        
-        // Welcome label 
-        JLabel welcomeLabel = new JLabel("Hi, " + username + "! What are you craving today?"); 
-        welcomeLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 20)); 
-        welcomeLabel.setForeground(Color.BLACK); 
-        welcomeLabel.setBounds(50, 30, 700, 40); 
-        bgLabel.add(welcomeLabel); 
-        
-        // Cuisine buttons with images 
-        String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "American", "Japanese", "Vietnamese", "French", "Mediterranean", "Vegetarian", "Asian"}; 
-        int x = 50, y = 100; 
+        JLabel bgLabel = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png")));
+        bgLabel.setBounds(0, 0, 800, 600);
+        panel.add(bgLabel);
+
+        // Welcome label
+        JLabel welcomeLabel = new JLabel("Hi, " + username + "! What are you craving today?");
+        welcomeLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+        welcomeLabel.setForeground(Color.BLACK);
+        welcomeLabel.setBounds(50, 30, 700, 40);
+        bgLabel.add(welcomeLabel);
+
+        // Cuisine buttons
+        String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "American", "Japanese", "Vietnamese", "French", "Mediterranean", "Vegetarian", "Asian"};
+        int x = 50, y = 100;
         for (String cuisine : cuisines) 
-        { 
-            // Load image for the cuisine 
-            ImageIcon icon = null; 
+        {
+            ImageIcon icon = null;
             try 
-            { 
-                icon = new ImageIcon(getClass().getResource("/resources/cuisine_icons/" + cuisine.toLowerCase() + ".png")); 
-                Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); 
-                icon = new ImageIcon(img); 
+            {
+                icon = new ImageIcon(getClass().getResource("/resources/cuisine_icons/" + cuisine.toLowerCase() + ".png"));
+                Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                icon = new ImageIcon(img);
             } 
             catch (Exception ex) 
-            { 
-                System.out.println("Image not found for " + cuisine); 
-            } 
-            
-            // Create button 
-            JButton btn = new JButton(cuisine, icon); 
-            btn.setHorizontalTextPosition(SwingConstants.CENTER); 
-            btn.setVerticalTextPosition(SwingConstants.BOTTOM); 
-            btn.setBounds(x, y, 120, 80); 
-            btn.setBackground(new Color(255, 182, 193, 200)); 
-            btn.setForeground(Color.BLACK); 
-            btn.setFocusPainted(false); 
+            {
+                System.out.println("Image not found for " + cuisine);
+            }
+
+            JButton btn = new JButton(cuisine, icon);
+            btn.setHorizontalTextPosition(SwingConstants.CENTER);
+            btn.setVerticalTextPosition(SwingConstants.BOTTOM);
+            btn.setBounds(x, y, 120, 80);
+            btn.setBackground(new Color(255, 182, 193, 200));
+            btn.setForeground(Color.BLACK);
+            btn.setFocusPainted(false);
             btn.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
 
-            // Hover zoom effect
+            // Hover effect
             final Rectangle originalBounds = btn.getBounds();
             final int targetWidth = (int)(originalBounds.width * 1.2);
             final int targetHeight = (int)(originalBounds.height * 1.2);
-
             Timer growTimer = new Timer(10, null);
             Timer shrinkTimer = new Timer(10, null);
 
             btn.addMouseListener(new MouseAdapter() 
-            { 
+            {
                 @Override
                 public void mouseEntered(MouseEvent e) 
                 {
                     shrinkTimer.stop();
                     btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                    btn.setBackground(new Color(255, 105, 180)); // darker pink
+                    btn.setBackground(new Color(255, 105, 180));
                     btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-
-                    growTimer.addActionListener(ev -> {
+                    growTimer.addActionListener(ev -> 
+                    {
                         Rectangle b = btn.getBounds();
-                        if (b.width < targetWidth) {
+                        if (b.width < targetWidth) 
+                        {
                             int newWidth = Math.min(b.width + 2, targetWidth);
                             int newHeight = Math.min(b.height + 2, targetHeight);
-                            int newX = b.x - 1; // center
+                            int newX = b.x - 1;
                             int newY = b.y - 1;
                             btn.setBounds(newX, newY, newWidth, newHeight);
-                        } else {
+                        } 
+                        else 
+                        {
                             growTimer.stop();
                         }
                     });
@@ -104,16 +104,19 @@ public class MainFrame extends JFrame
                     btn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     btn.setBackground(new Color(255, 182, 193, 200));
                     btn.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
-
-                    shrinkTimer.addActionListener(ev -> {
+                    shrinkTimer.addActionListener(ev -> 
+                    {
                         Rectangle b = btn.getBounds();
-                        if (b.width > originalBounds.width) {
+                        if (b.width > originalBounds.width) 
+                        {
                             int newWidth = Math.max(b.width - 2, originalBounds.width);
                             int newHeight = Math.max(b.height - 2, originalBounds.height);
                             int newX = b.x + 1;
                             int newY = b.y + 1;
                             btn.setBounds(newX, newY, newWidth, newHeight);
-                        } else {
+                        } 
+                        else 
+                        {
                             shrinkTimer.stop();
                         }
                     });
@@ -121,60 +124,235 @@ public class MainFrame extends JFrame
                 }
             });
 
-            // Click event
-            btn.addActionListener(e -> showRestaurants(cuisine)); 
-            bgLabel.add(btn); 
-            x += 140; 
+            btn.addActionListener(e -> showRestaurants(cuisine));
+            bgLabel.add(btn);
+            x += 140;
             if (x > 700) 
-            { 
-                x = 50; 
-                y += 100; 
-            } 
-        } 
-        add(panel); 
-        setVisible(true); 
-    } 
-    
-    // Show restaurants of selected cuisine in a new scrollable frame 
+            {
+                x = 50;
+                y += 100;
+            }
+        }
+
+        add(panel);
+        setVisible(true);
+    }
+
     private void showRestaurants(String cuisine) 
-    { 
-        List<Restaurant> list = restaurantDAO.getRestaurantsByCuisine(cuisine); 
-        JFrame frame = new JFrame(cuisine + " Restaurants"); 
-        frame.setSize(600, 500); 
-        frame.setLocationRelativeTo(this); 
-        JPanel panel = new JPanel(); 
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); 
+    {
+        java.util.List<Restaurant> originalList = restaurantDAO.getRestaurantsByCuisine(cuisine);
+        @SuppressWarnings("unchecked")
+        final java.util.List<Restaurant>[] currentList = new java.util.List[]{new ArrayList<>(originalList)};
 
-        for (Restaurant r : list) 
-        { 
-            JPanel rPanel = new JPanel(); 
-            rPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); 
-            rPanel.setBackground(new Color(255, 192, 203)); // lighter pink 
+        JFrame frame = new JFrame(cuisine + " Restaurants");
+        frame.setSize(650, 600);
+        frame.setLocationRelativeTo(this);
 
-            JLabel nameLabel = new JLabel(r.getName() + " (" + r.getDiningType() + ")"); 
-            JLabel addressLabel = new JLabel("Address: " + r.getAddress()); 
-
-            // Add rating
-            JLabel ratingLabel = new JLabel("Rating: " + r.getRating() + " ★"); 
-            ratingLabel.setForeground(Color.ORANGE);
-            ratingLabel.setFont(new Font("Arial", Font.BOLD, 14));
-
-            rPanel.add(nameLabel); 
-            rPanel.add(addressLabel); 
-            rPanel.add(ratingLabel); 
-        
-            JButton detailsBtn = new JButton("View Details"); 
-            rPanel.add(detailsBtn); 
-            panel.add(rPanel); 
-        } 
-
-        JScrollPane scrollPane = new JScrollPane(panel); 
-        frame.add(scrollPane); 
-        frame.setVisible(true); 
-    } 
+        // Background panel 
+        JLabel bgLabel = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png"))); 
+        bgLabel.setLayout(new BorderLayout()); 
+        frame.setContentPane(bgLabel); 
     
+        // Main panel 
+        JPanel mainPanel = new JPanel(new BorderLayout()); 
+        mainPanel.setOpaque(false); // Make it transparent to show background
+
+        // Top bar with fixed BoxLayout
+        JPanel topBar = new JPanel();
+        topBar.setLayout(new BoxLayout(topBar, BoxLayout.X_AXIS));
+        topBar.setBackground(new Color(255, 160, 180, 200));
+        topBar.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        JButton backBtn = new JButton("← Back");
+        backBtn.setBackground(Color.WHITE);
+        backBtn.setPreferredSize(new Dimension(100, 30));
+        backBtn.addActionListener(e -> frame.dispose());
+        topBar.add(backBtn);
+        topBar.add(Box.createHorizontalStrut(10));
+
+        JTextField searchField = new JTextField();
+        searchField.setMaximumSize(new Dimension(150, 30));
+        topBar.add(searchField);
+        topBar.add(Box.createHorizontalStrut(10));
+
+        JButton searchBtn = new JButton("Search");
+        searchBtn.setBackground(Color.WHITE);
+        searchBtn.setPreferredSize(new Dimension(80, 30));
+        topBar.add(searchBtn);
+        topBar.add(Box.createHorizontalStrut(10));
+
+        JButton sortHighBtn = new JButton("Sort: High Rating");
+        sortHighBtn.setBackground(Color.WHITE);
+        sortHighBtn.setPreferredSize(new Dimension(130, 30));
+        topBar.add(sortHighBtn);
+        topBar.add(Box.createHorizontalStrut(10));
+
+        JButton sortLowBtn = new JButton("Sort: Low Rating");
+        sortLowBtn.setBackground(Color.WHITE);
+        sortLowBtn.setPreferredSize(new Dimension(130, 30));
+        topBar.add(sortLowBtn);
+        topBar.add(Box.createHorizontalStrut(5));
+
+        JButton sortAlphaBtn = new JButton("Sort: A-Z");
+        sortAlphaBtn.setBackground(Color.WHITE);
+        sortAlphaBtn.setPreferredSize(new Dimension(100, 30));
+        topBar.add(sortAlphaBtn);
+
+        mainPanel.add(topBar, BorderLayout.NORTH);
+
+        // List panel
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setOpaque(false);
+
+        JScrollPane scrollPane = new JScrollPane(listPanel); 
+        scrollPane.getViewport().setOpaque(false); // transparent viewport 
+        scrollPane.setOpaque(false); 
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        Runnable loadList = () -> 
+        {
+            listPanel.removeAll();
+            for (Restaurant r : currentList[0]) 
+            {
+                JPanel card = new JPanel();
+                card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+                card.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+                card.setBackground(new Color(255, 255, 255, 200));
+                card.setMaximumSize(new Dimension(550, 130));
+
+                JLabel name = new JLabel(r.getName());
+                name.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
+                JLabel address = new JLabel(r.getAddress());
+                JLabel ratingLabel = new JLabel("Rating: " + r.getRating() + " ⭐");
+
+                JButton detailBtn = new JButton("View Details");
+                detailBtn.setBackground(new Color(255, 182, 193));
+
+                // Detail page 
+                detailBtn.addActionListener(ev -> 
+                { 
+                    JFrame detailFrame = new JFrame(r.getName() + " Details"); 
+                    detailFrame.setSize(500, 400); 
+                    detailFrame.setLocationRelativeTo(frame); 
+
+                    JLabel detailBg = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png"))); 
+                    detailBg.setLayout(new BorderLayout()); 
+                    detailFrame.setContentPane(detailBg); 
+
+                    JPanel content = new JPanel(); 
+                    content.setOpaque(false); 
+                    content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS)); 
+                    content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); 
+                    
+                    JLabel nameLabel = new JLabel(r.getName()); 
+                    nameLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 22)); 
+                    JLabel addressLabel = new JLabel("Address: " + r.getAddress()); 
+                    JLabel ratingLabel2 = new JLabel("Rating: " + r.getRating() + " ⭐"); 
+
+                    // Convert price range symbols to words
+                    String priceText;
+                    switch (r.getPriceRange()) 
+                    {
+                        case "$":
+                            priceText = "Inexpensive";
+                            break;
+                        case "$$":
+                            priceText = "Moderate";
+                            break;
+                        case "$$$":
+                            priceText = "Expensive";
+                            break;
+                        case "$$$$":
+                            priceText = "Luxury";
+                            break;
+                        default:
+                            priceText = "Not specified";
+                    }
+
+                    JLabel descriptionLabel = new JLabel("<html><body style='width: 400px;'>Cuisines: " + String.join(", ", r.getCuisines()) + 
+                                                          "<br>Dining Type: " + r.getDiningType() + 
+                                                          "<br>Price Range: " + priceText + 
+                                                          "<br>Hours: " + r.getHours() + 
+                                                          "<br>Phone: " + r.getPhone() + 
+                                                          "<br>Email: " + r.getEmail() + "</body></html>");
+                    
+                    content.add(nameLabel); 
+                    content.add(Box.createVerticalStrut(10)); 
+                    content.add(addressLabel); 
+                    content.add(Box.createVerticalStrut(5)); 
+                    content.add(ratingLabel2); 
+                    content.add(Box.createVerticalStrut(5)); 
+                    content.add(descriptionLabel); 
+                    
+                    detailBg.add(content, BorderLayout.CENTER); 
+                    detailFrame.setVisible(true); 
+                });
+
+                card.add(name);
+                card.add(address);
+                card.add(ratingLabel);
+                card.add(detailBtn);
+
+                listPanel.add(card);
+                listPanel.add(Box.createVerticalStrut(10));
+            }
+            listPanel.revalidate();
+            listPanel.repaint();
+        };
+
+        loadList.run();
+
+        // Search
+        searchBtn.addActionListener(e -> 
+        {
+            String keyword = searchField.getText().trim().toLowerCase();
+            if (keyword.isEmpty()) 
+            {
+                currentList[0] = new ArrayList<>(originalList);
+            } 
+            else 
+            {
+                java.util.List<Restaurant> filtered = new ArrayList<>();
+                for (Restaurant r : originalList) 
+                {
+                    if (r.getName().toLowerCase().contains(keyword)) 
+                    {
+                        filtered.add(r);
+                    }
+                }
+                currentList[0] = filtered;
+            }
+            loadList.run();
+        });
+
+        // Sort High
+        sortHighBtn.addActionListener(e -> 
+        {
+            currentList[0].sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
+            loadList.run();
+        });
+
+        // Sort Low
+        sortLowBtn.addActionListener(e -> 
+        {
+            currentList[0].sort(Comparator.comparingDouble(Restaurant::getRating));
+            loadList.run();
+        });
+
+        // Sort Alphabetical
+        sortAlphaBtn.addActionListener(e -> 
+        {
+            currentList[0].sort(Comparator.comparing(Restaurant::getName, String.CASE_INSENSITIVE_ORDER));
+            loadList.run();
+        });
+
+        bgLabel.add(mainPanel);
+        frame.setVisible(true);
+    }
+
     public static void main(String[] args) 
-    { 
-        new MainFrame("Ansuya"); 
-    } 
+    {
+        new MainFrame("Ansuya");
+    }
 }

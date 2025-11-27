@@ -80,4 +80,15 @@ public class Restaurant
     { 
         return rating; 
     }
+
+    public void setRating(double rating) 
+    { 
+        this.rating = rating; 
+    }
+
+    // Dynamic image path based on restaurant ID
+    public String getImagePath()
+    {
+        return "resources/restaurant_images/" + id + ".jpg";
+    } 
 }
