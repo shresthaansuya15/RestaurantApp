@@ -6,7 +6,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.Timer;
 
-public class MainFrame extends JFrame 
+public class MainFrame extends JFrame
 {
     private RestaurantDAO restaurantDAO;
 
@@ -20,7 +20,6 @@ public class MainFrame extends JFrame
 
         restaurantDAO = new RestaurantDAO();
 
-        // Main panel
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBackground(new Color(255, 182, 193));
@@ -29,7 +28,6 @@ public class MainFrame extends JFrame
         bgLabel.setBounds(0, 0, 800, 600);
         panel.add(bgLabel);
 
-        // Welcome label
         JLabel welcomeLabel = new JLabel("Hi, " + username + "! What are you craving today?");
         welcomeLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
         welcomeLabel.setForeground(Color.BLACK);
@@ -148,16 +146,14 @@ public class MainFrame extends JFrame
         frame.setSize(650, 600);
         frame.setLocationRelativeTo(this);
 
-        // Background panel 
         JLabel bgLabel = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png"))); 
         bgLabel.setLayout(new BorderLayout()); 
         frame.setContentPane(bgLabel); 
-    
-        // Main panel 
-        JPanel mainPanel = new JPanel(new BorderLayout()); 
-        mainPanel.setOpaque(false); // Make it transparent to show background
 
-        // Top bar with fixed BoxLayout
+        JPanel mainPanel = new JPanel(new BorderLayout()); 
+        mainPanel.setOpaque(false);
+
+        // Top bar
         JPanel topBar = new JPanel();
         topBar.setLayout(new BoxLayout(topBar, BoxLayout.X_AXIS));
         topBar.setBackground(new Color(255, 160, 180, 200));
@@ -200,13 +196,12 @@ public class MainFrame extends JFrame
 
         mainPanel.add(topBar, BorderLayout.NORTH);
 
-        // List panel
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setOpaque(false);
 
         JScrollPane scrollPane = new JScrollPane(listPanel); 
-        scrollPane.getViewport().setOpaque(false); // transparent viewport 
+        scrollPane.getViewport().setOpaque(false); 
         scrollPane.setOpaque(false); 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -215,84 +210,129 @@ public class MainFrame extends JFrame
             listPanel.removeAll();
             for (Restaurant r : currentList[0]) 
             {
-                JPanel card = new JPanel();
-                card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+                JPanel card = new JPanel(new BorderLayout());
                 card.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
                 card.setBackground(new Color(255, 255, 255, 200));
-                card.setMaximumSize(new Dimension(550, 130));
+                card.setMaximumSize(new Dimension(600, 130));
+
+                // Left thumbnail
+                try 
+                {
+                    ImageIcon icon = new ImageIcon(getClass().getResource("/resources/restaurant_images/" + r.getId() + ".jpg"));
+                    Image img = icon.getImage();
+                    int newWidth = 120;
+                    int newHeight = (img.getHeight(null) * newWidth) / img.getWidth(null);
+                    Image scaledImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+                    JLabel imgLabel = new JLabel(new ImageIcon(scaledImg));
+                    card.add(imgLabel, BorderLayout.WEST);
+                }  
+                catch (Exception ex) 
+                {
+                    System.out.println("Image not found for " + r.getName());
+                }
+
+                JPanel infoPanel = new JPanel();
+                infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+                infoPanel.setOpaque(false);
+                infoPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
                 JLabel name = new JLabel(r.getName());
-                name.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
-                JLabel address = new JLabel(r.getAddress());
+                name.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
                 JLabel ratingLabel = new JLabel("Rating: " + r.getRating() + " ⭐");
+
+                String priceText;
+                switch (r.getPriceRange()) 
+                {
+                    case "$": priceText = "Inexpensive"; break;
+                    case "$$": priceText = "Moderate"; break;
+                    case "$$$": priceText = "Expensive"; break;
+                    case "$$$$": priceText = "Luxury"; break;
+                    default: priceText = "Not specified";
+                }
+                JLabel priceLabel = new JLabel("Price: " + priceText);
 
                 JButton detailBtn = new JButton("View Details");
                 detailBtn.setBackground(new Color(255, 182, 193));
 
-                // Detail page 
+                // Detail page
                 detailBtn.addActionListener(ev -> 
-                { 
-                    JFrame detailFrame = new JFrame(r.getName() + " Details"); 
-                    detailFrame.setSize(500, 400); 
-                    detailFrame.setLocationRelativeTo(frame); 
+                {
+                    JFrame detailFrame = new JFrame(r.getName() + " Details");
+                    detailFrame.setSize(700, 500);
+                    detailFrame.setLocationRelativeTo(frame);
 
-                    JLabel detailBg = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png"))); 
-                    detailBg.setLayout(new BorderLayout()); 
-                    detailFrame.setContentPane(detailBg); 
+                    JLabel detailBg = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png")));
+                    detailBg.setLayout(new BorderLayout());
+                    detailFrame.setContentPane(detailBg);
 
-                    JPanel content = new JPanel(); 
-                    content.setOpaque(false); 
-                    content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS)); 
-                    content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); 
-                    
-                    JLabel nameLabel = new JLabel(r.getName()); 
-                    nameLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 22)); 
-                    JLabel addressLabel = new JLabel("Address: " + r.getAddress()); 
-                    JLabel ratingLabel2 = new JLabel("Rating: " + r.getRating() + " ⭐"); 
+                    JPanel content = new JPanel(new BorderLayout(20, 0));
+                    content.setOpaque(false);
+                    content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-                    // Convert price range symbols to words
-                    String priceText;
+                    // Left info
+                    JPanel infoDetail = new JPanel();
+                    infoDetail.setLayout(new BoxLayout(infoDetail, BoxLayout.Y_AXIS));
+                    infoDetail.setOpaque(false);
+
+                    JLabel nameDetail = new JLabel(r.getName());
+                    nameDetail.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
+                    JLabel addressDetail = new JLabel("Address: " + r.getAddress());
+                    JLabel ratingDetail2 = new JLabel("Rating: " + r.getRating() + " ⭐");
+
+                    String priceDetail;
                     switch (r.getPriceRange()) 
                     {
-                        case "$":
-                            priceText = "Inexpensive";
-                            break;
-                        case "$$":
-                            priceText = "Moderate";
-                            break;
-                        case "$$$":
-                            priceText = "Expensive";
-                            break;
-                        case "$$$$":
-                            priceText = "Luxury";
-                            break;
-                        default:
-                            priceText = "Not specified";
+                        case "$": priceDetail = "Inexpensive"; break;
+                        case "$$": priceDetail = "Moderate"; break;
+                        case "$$$": priceDetail = "Expensive"; break;
+                        case "$$$$": priceDetail = "Luxury"; break;
+                        default: priceDetail = "Not specified";
                     }
 
-                    JLabel descriptionLabel = new JLabel("<html><body style='width: 400px;'>Cuisines: " + String.join(", ", r.getCuisines()) + 
-                                                          "<br>Dining Type: " + r.getDiningType() + 
-                                                          "<br>Price Range: " + priceText + 
-                                                          "<br>Hours: " + r.getHours() + 
-                                                          "<br>Phone: " + r.getPhone() + 
-                                                          "<br>Email: " + r.getEmail() + "</body></html>");
-                    
-                    content.add(nameLabel); 
-                    content.add(Box.createVerticalStrut(10)); 
-                    content.add(addressLabel); 
-                    content.add(Box.createVerticalStrut(5)); 
-                    content.add(ratingLabel2); 
-                    content.add(Box.createVerticalStrut(5)); 
-                    content.add(descriptionLabel); 
-                    
-                    detailBg.add(content, BorderLayout.CENTER); 
-                    detailFrame.setVisible(true); 
+                    JLabel descriptionLabel = new JLabel("<html><body style='width: 250px;'>Cuisines: " + String.join(", ", r.getCuisines()) + 
+                                                     "<br>Dining Type: " + r.getDiningType() + 
+                                                     "<br>Price Range: " + priceDetail + 
+                                                     "<br>Hours: " + r.getHours() + 
+                                                     "<br>Phone: " + r.getPhone() + 
+                                                     "<br>Email: " + r.getEmail() + "</body></html>");
+
+                    infoDetail.add(nameDetail);
+                    infoDetail.add(Box.createVerticalStrut(10));
+                    infoDetail.add(addressDetail);
+                    infoDetail.add(Box.createVerticalStrut(5));
+                    infoDetail.add(ratingDetail2);
+                    infoDetail.add(Box.createVerticalStrut(5));
+                    infoDetail.add(descriptionLabel);
+
+                    content.add(infoDetail, BorderLayout.WEST);
+
+                    // Right image
+                    try 
+                    {
+                        ImageIcon icon = new ImageIcon(getClass().getResource("/resources/restaurant_images/" + r.getId() + ".jpg"));
+                        Image img = icon.getImage();
+                        int newWidth = 250;
+                        int newHeight = (img.getHeight(null) * newWidth) / img.getWidth(null);
+                        Image scaledImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+                        JLabel imgLabel = new JLabel(new ImageIcon(scaledImg));
+                        content.add(imgLabel, BorderLayout.EAST);
+                    } 
+                    catch (Exception ex) 
+                    {
+                        System.out.println("Image not found for " + r.getName());
+                    }
+
+                    detailBg.add(content, BorderLayout.CENTER);
+                    detailFrame.setVisible(true);
                 });
 
-                card.add(name);
-                card.add(address);
-                card.add(ratingLabel);
-                card.add(detailBtn);
+                infoPanel.add(name);
+                infoPanel.add(ratingLabel);
+                infoPanel.add(priceLabel);
+                infoPanel.add(Box.createVerticalStrut(5));
+                infoPanel.add(detailBtn);
+
+                card.add(infoPanel, BorderLayout.CENTER);
 
                 listPanel.add(card);
                 listPanel.add(Box.createVerticalStrut(10));
@@ -303,7 +343,6 @@ public class MainFrame extends JFrame
 
         loadList.run();
 
-        // Search
         searchBtn.addActionListener(e -> 
         {
             String keyword = searchField.getText().trim().toLowerCase();
@@ -326,21 +365,18 @@ public class MainFrame extends JFrame
             loadList.run();
         });
 
-        // Sort High
         sortHighBtn.addActionListener(e -> 
         {
             currentList[0].sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
             loadList.run();
         });
 
-        // Sort Low
         sortLowBtn.addActionListener(e -> 
         {
             currentList[0].sort(Comparator.comparingDouble(Restaurant::getRating));
             loadList.run();
         });
 
-        // Sort Alphabetical
         sortAlphaBtn.addActionListener(e -> 
         {
             currentList[0].sort(Comparator.comparing(Restaurant::getName, String.CASE_INSENSITIVE_ORDER));
@@ -353,6 +389,6 @@ public class MainFrame extends JFrame
 
     public static void main(String[] args) 
     {
-        new MainFrame("Ansuya");
+        SwingUtilities.invokeLater(() -> new MainFrame("User"));
     }
 }
