@@ -1,10 +1,19 @@
 ReviewID|RestaurantID|Username|Rating|Comment
 REV001|R001|john_doe|5|Loved the cheeseburger and fries!
+REV016|R001|alice_w|4|Burger was good, but the fries were a bit cold.
+REV017|R001|emily_r|5|Amazing service and delicious food!
 REV002|R002|jane_smith|4|Sushi was fresh, but a bit pricey.
+REV018|R002|olivia_p|5|Best sushi I’ve had in a long time!
+REV019|R002|ryan_h|4|Good quality, but a little expensive.
 REV003|R003|alice_w|3|Pizza was okay, could use more toppings.
+REV020|R003|bob_k|4|Nice crust and cheese, enjoyed the pizza.
+REV024|R003|emily_r|4|Good pizza overall, but could have more toppings.
 REV004|R004|bob_k|4|Tacos were tasty and spicy!
+REV023|R004|alice_w|3|Tacos were okay, but lacked flavor.
 REV005|R005|charlie_m|5|Best burgers in town, highly recommend.
+REV021|R005|lisa_t|4|Burger was tasty, service was friendly.
 REV006|R006|emily_r|4|Pasta was delicious, nice ambiance.
+REV022|R006|john_doe|5|Loved the pasta and garlic bread, will come again.
 REV007|R007|david_s|5|Chicken curry was perfect, naan was soft.
 REV008|R008|lisa_t|3|Sweet and sour pork was a bit too sweet.
 REV009|R009|michael_b|4|Bagels were fresh, coffee was hot.
@@ -14,3 +23,54 @@ REV012|R012|olivia_p|5|Crepes were amazing, coffee was perfect.
 REV013|R013|ryan_h|4|Buffalo wings were spicy, fries were great.
 REV014|R014|chloe_m|5|Ramen was very tasty, gyoza was a nice side.
 REV015|R015|ansuya_s|5|Steak was perfectly cooked, dessert was amazing.
+REV025|R005|kevin_l|5|Really enjoyed the burger, fries were perfect.
+REV026|R001|ryan_h|4|Great cafe, coffee was excellent.
+REV027|R002|chloe_m|5|Fresh and tasty sushi, highly recommend!
+REV028|R003|lisa_t|3|Pizza was decent, a bit bland for my taste.
+REV029|R035|john_doe|4|Mediterranean dishes were tasty, loved the hummus.
+REV030|R035|alice_w|5|Amazing experience, the falafel was perfect!
+REV031|R038|emily_r|4|Dumplings were well-cooked, nice ambiance.
+REV032|R038|bob_k|5|Loved the dumpling flavors, service was friendly.
+REV033|R049|lisa_t|5|Pho was flavorful, spring rolls were perfect.
+REV034|R049|kevin_l|4|Good Vietnamese food, but a bit salty.
+REV035|R049|alice_w|5|Really enjoyed the pho, will come back soon.
+REV036|R020|john_doe|4|Bagels were tasty, coffee was okay.
+REV037|R020|emily_r|5|Perfect breakfast spot, love the bagels.
+REV038|R024|alice_w|4|Burgers were great, fries could be hotter.
+REV039|R024|kevin_l|5|Really enjoyed the meal and friendly staff.
+REV040|R027|lisa_t|3|Food was okay, but delivery was slow.
+REV041|R027|bob_k|4|Tasty food, but small portions.
+REV042|R030|sarah_j|5|Excellent pho, authentic taste.
+REV043|R030|ryan_h|4|Good flavors, nice service.
+REV044|R031|john_doe|4|Crepes were fluffy, coffee was hot.
+REV045|R031|chloe_m|5|Loved the sweet crepes, will return.
+REV046|R032|emily_r|4|Buffalo wings were well cooked, good portion.
+REV047|R032|alice_w|3|Wings were okay, sauce was too spicy.
+REV048|R033|kevin_l|5|Ramen broth was flavorful, noodles perfect.
+REV049|R033|lisa_t|4|Very good ramen, gyoza was nice.
+REV050|R034|john_doe|5|Steak was cooked perfectly, sides were tasty.
+REV051|R034|sarah_j|4|Great dinner, service was friendly.
+REV052|R036|alice_w|4|Veggie dishes were fresh and flavorful.
+REV053|R036|emily_r|5|Loved the vegetarian options, highly recommend.
+REV054|R037|ryan_h|4|BBQ was smoky and tasty.
+REV055|R037|bob_k|3|Food was good, but service was slow.
+REV056|R040|lisa_t|4|Pizza was delicious, service okay.
+REV057|R040|kevin_l|5|Loved the pizza, will return soon.
+REV058|R041|sarah_j|4|Noodles were well cooked, flavors good.
+REV059|R041|john_doe|5|Great Asian dishes, will come again.
+REV060|R042|alice_w|3|Tacos were a bit dry.
+REV061|R042|emily_r|4|Good tacos, decent portion size.
+REV062|R043|ryan_h|4|Burger was good, fries tasty.
+REV063|R043|chloe_m|5|Really enjoyed the burger meal.
+REV064|R044|kevin_l|4|Pasta was good, sauce was tasty.
+REV065|R044|lisa_t|5|Loved the pasta, service was excellent.
+REV066|R045|john_doe|5|Curry was flavorful, rice perfect.
+REV067|R045|alice_w|4|Good curry, naan was soft.
+REV068|R046|emily_r|5|Chinese dishes were excellent, service top notch.
+REV069|R046|bob_k|4|Food quality was great, a little pricey.
+REV070|R047|ryan_h|3|Bagels were okay, coffee decent.
+REV071|R047|sarah_j|4|Nice breakfast, friendly staff.
+REV072|R048|kevin_l|5|Sandwiches were fresh and tasty.
+REV073|R048|lisa_t|4|Enjoyed the sandwich, portion size good.
+REV074|R050|john_doe|5|Crepes were amazing, coffee perfect.
+REV075|R050|alice_w|4|Good French food, service friendly.

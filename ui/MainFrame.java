@@ -6,12 +6,12 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.Timer;
 
-public class MainFrame extends JFrame
-{
-    private RestaurantDAO restaurantDAO;
+public class MainFrame extends JFrame {
 
-    public MainFrame(String username) 
-    {
+    private RestaurantDAO restaurantDAO;
+    private ReviewDAO reviewDAO;
+
+    public MainFrame(String username) {
         setTitle("Restaurant Advisor");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -19,6 +19,7 @@ public class MainFrame extends JFrame
         setResizable(false);
 
         restaurantDAO = new RestaurantDAO();
+        reviewDAO = new ReviewDAO();
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -37,17 +38,13 @@ public class MainFrame extends JFrame
         // Cuisine buttons
         String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "American", "Japanese", "Vietnamese", "French", "Mediterranean", "Vegetarian", "Asian"};
         int x = 50, y = 100;
-        for (String cuisine : cuisines) 
-        {
+        for (String cuisine : cuisines) {
             ImageIcon icon = null;
-            try 
-            {
+            try {
                 icon = new ImageIcon(getClass().getResource("/resources/cuisine_icons/" + cuisine.toLowerCase() + ".png"));
                 Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
                 icon = new ImageIcon(img);
-            } 
-            catch (Exception ex) 
-            {
+            } catch (Exception ex) {
                 System.out.println("Image not found for " + cuisine);
             }
 
@@ -67,28 +64,22 @@ public class MainFrame extends JFrame
             Timer growTimer = new Timer(10, null);
             Timer shrinkTimer = new Timer(10, null);
 
-            btn.addMouseListener(new MouseAdapter() 
-            {
+            btn.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseEntered(MouseEvent e) 
-                {
+                public void mouseEntered(MouseEvent e) {
                     shrinkTimer.stop();
                     btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
                     btn.setBackground(new Color(255, 105, 180));
                     btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-                    growTimer.addActionListener(ev -> 
-                    {
+                    growTimer.addActionListener(ev -> {
                         Rectangle b = btn.getBounds();
-                        if (b.width < targetWidth) 
-                        {
+                        if (b.width < targetWidth) {
                             int newWidth = Math.min(b.width + 2, targetWidth);
                             int newHeight = Math.min(b.height + 2, targetHeight);
                             int newX = b.x - 1;
                             int newY = b.y - 1;
                             btn.setBounds(newX, newY, newWidth, newHeight);
-                        } 
-                        else 
-                        {
+                        } else {
                             growTimer.stop();
                         }
                     });
@@ -96,25 +87,20 @@ public class MainFrame extends JFrame
                 }
 
                 @Override
-                public void mouseExited(MouseEvent e) 
-                {
+                public void mouseExited(MouseEvent e) {
                     growTimer.stop();
                     btn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     btn.setBackground(new Color(255, 182, 193, 200));
                     btn.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
-                    shrinkTimer.addActionListener(ev -> 
-                    {
+                    shrinkTimer.addActionListener(ev -> {
                         Rectangle b = btn.getBounds();
-                        if (b.width > originalBounds.width) 
-                        {
+                        if (b.width > originalBounds.width) {
                             int newWidth = Math.max(b.width - 2, originalBounds.width);
                             int newHeight = Math.max(b.height - 2, originalBounds.height);
                             int newX = b.x + 1;
                             int newY = b.y + 1;
                             btn.setBounds(newX, newY, newWidth, newHeight);
-                        } 
-                        else 
-                        {
+                        } else {
                             shrinkTimer.stop();
                         }
                     });
@@ -122,11 +108,10 @@ public class MainFrame extends JFrame
                 }
             });
 
-            btn.addActionListener(e -> showRestaurants(cuisine));
+            btn.addActionListener(e -> showRestaurants(cuisine, username));
             bgLabel.add(btn);
             x += 140;
-            if (x > 700) 
-            {
+            if (x > 700) {
                 x = 50;
                 y += 100;
             }
@@ -136,8 +121,7 @@ public class MainFrame extends JFrame
         setVisible(true);
     }
 
-    private void showRestaurants(String cuisine) 
-    {
+    private void showRestaurants(String cuisine, String username) {
         java.util.List<Restaurant> originalList = restaurantDAO.getRestaurantsByCuisine(cuisine);
         @SuppressWarnings("unchecked")
         final java.util.List<Restaurant>[] currentList = new java.util.List[]{new ArrayList<>(originalList)};
@@ -205,19 +189,16 @@ public class MainFrame extends JFrame
         scrollPane.setOpaque(false); 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        Runnable loadList = () -> 
-        {
+        Runnable loadList = () -> {
             listPanel.removeAll();
-            for (Restaurant r : currentList[0]) 
-            {
+            for (Restaurant r : currentList[0]) {
                 JPanel card = new JPanel(new BorderLayout());
                 card.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
                 card.setBackground(new Color(255, 255, 255, 200));
                 card.setMaximumSize(new Dimension(600, 130));
 
                 // Left thumbnail
-                try 
-                {
+                try {
                     ImageIcon icon = new ImageIcon(getClass().getResource("/resources/restaurant_images/" + r.getId() + ".jpg"));
                     Image img = icon.getImage();
                     int newWidth = 120;
@@ -225,9 +206,7 @@ public class MainFrame extends JFrame
                     Image scaledImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
                     JLabel imgLabel = new JLabel(new ImageIcon(scaledImg));
                     card.add(imgLabel, BorderLayout.WEST);
-                }  
-                catch (Exception ex) 
-                {
+                } catch (Exception ex) {
                     System.out.println("Image not found for " + r.getName());
                 }
 
@@ -241,8 +220,7 @@ public class MainFrame extends JFrame
                 JLabel ratingLabel = new JLabel("Rating: " + r.getRating() + " ⭐");
 
                 String priceText;
-                switch (r.getPriceRange()) 
-                {
+                switch (r.getPriceRange()) {
                     case "$": priceText = "Inexpensive"; break;
                     case "$$": priceText = "Moderate"; break;
                     case "$$$": priceText = "Expensive"; break;
@@ -254,77 +232,7 @@ public class MainFrame extends JFrame
                 JButton detailBtn = new JButton("View Details");
                 detailBtn.setBackground(new Color(255, 182, 193));
 
-                // Detail page
-                detailBtn.addActionListener(ev -> 
-                {
-                    JFrame detailFrame = new JFrame(r.getName() + " Details");
-                    detailFrame.setSize(700, 500);
-                    detailFrame.setLocationRelativeTo(frame);
-
-                    JLabel detailBg = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png")));
-                    detailBg.setLayout(new BorderLayout());
-                    detailFrame.setContentPane(detailBg);
-
-                    JPanel content = new JPanel(new BorderLayout(20, 0));
-                    content.setOpaque(false);
-                    content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-                    // Left info
-                    JPanel infoDetail = new JPanel();
-                    infoDetail.setLayout(new BoxLayout(infoDetail, BoxLayout.Y_AXIS));
-                    infoDetail.setOpaque(false);
-
-                    JLabel nameDetail = new JLabel(r.getName());
-                    nameDetail.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
-                    JLabel addressDetail = new JLabel("Address: " + r.getAddress());
-                    JLabel ratingDetail2 = new JLabel("Rating: " + r.getRating() + " ⭐");
-
-                    String priceDetail;
-                    switch (r.getPriceRange()) 
-                    {
-                        case "$": priceDetail = "Inexpensive"; break;
-                        case "$$": priceDetail = "Moderate"; break;
-                        case "$$$": priceDetail = "Expensive"; break;
-                        case "$$$$": priceDetail = "Luxury"; break;
-                        default: priceDetail = "Not specified";
-                    }
-
-                    JLabel descriptionLabel = new JLabel("<html><body style='width: 250px;'>Cuisines: " + String.join(", ", r.getCuisines()) + 
-                                                     "<br>Dining Type: " + r.getDiningType() + 
-                                                     "<br>Price Range: " + priceDetail + 
-                                                     "<br>Hours: " + r.getHours() + 
-                                                     "<br>Phone: " + r.getPhone() + 
-                                                     "<br>Email: " + r.getEmail() + "</body></html>");
-
-                    infoDetail.add(nameDetail);
-                    infoDetail.add(Box.createVerticalStrut(10));
-                    infoDetail.add(addressDetail);
-                    infoDetail.add(Box.createVerticalStrut(5));
-                    infoDetail.add(ratingDetail2);
-                    infoDetail.add(Box.createVerticalStrut(5));
-                    infoDetail.add(descriptionLabel);
-
-                    content.add(infoDetail, BorderLayout.WEST);
-
-                    // Right image
-                    try 
-                    {
-                        ImageIcon icon = new ImageIcon(getClass().getResource("/resources/restaurant_images/" + r.getId() + ".jpg"));
-                        Image img = icon.getImage();
-                        int newWidth = 250;
-                        int newHeight = (img.getHeight(null) * newWidth) / img.getWidth(null);
-                        Image scaledImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-                        JLabel imgLabel = new JLabel(new ImageIcon(scaledImg));
-                        content.add(imgLabel, BorderLayout.EAST);
-                    } 
-                    catch (Exception ex) 
-                    {
-                        System.out.println("Image not found for " + r.getName());
-                    }
-
-                    detailBg.add(content, BorderLayout.CENTER);
-                    detailFrame.setVisible(true);
-                });
+                detailBtn.addActionListener(ev -> showDetail(r, username));
 
                 infoPanel.add(name);
                 infoPanel.add(ratingLabel);
@@ -333,7 +241,6 @@ public class MainFrame extends JFrame
                 infoPanel.add(detailBtn);
 
                 card.add(infoPanel, BorderLayout.CENTER);
-
                 listPanel.add(card);
                 listPanel.add(Box.createVerticalStrut(10));
             }
@@ -343,42 +250,31 @@ public class MainFrame extends JFrame
 
         loadList.run();
 
-        searchBtn.addActionListener(e -> 
-        {
+        searchBtn.addActionListener(e -> {
             String keyword = searchField.getText().trim().toLowerCase();
-            if (keyword.isEmpty()) 
-            {
+            if (keyword.isEmpty()) {
                 currentList[0] = new ArrayList<>(originalList);
-            } 
-            else 
-            {
+            } else {
                 java.util.List<Restaurant> filtered = new ArrayList<>();
-                for (Restaurant r : originalList) 
-                {
-                    if (r.getName().toLowerCase().contains(keyword)) 
-                    {
-                        filtered.add(r);
-                    }
+                for (Restaurant r : originalList) {
+                    if (r.getName().toLowerCase().contains(keyword)) filtered.add(r);
                 }
                 currentList[0] = filtered;
             }
             loadList.run();
         });
 
-        sortHighBtn.addActionListener(e -> 
-        {
+        sortHighBtn.addActionListener(e -> {
             currentList[0].sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
             loadList.run();
         });
 
-        sortLowBtn.addActionListener(e -> 
-        {
+        sortLowBtn.addActionListener(e -> {
             currentList[0].sort(Comparator.comparingDouble(Restaurant::getRating));
             loadList.run();
         });
 
-        sortAlphaBtn.addActionListener(e -> 
-        {
+        sortAlphaBtn.addActionListener(e -> {
             currentList[0].sort(Comparator.comparing(Restaurant::getName, String.CASE_INSENSITIVE_ORDER));
             loadList.run();
         });
@@ -387,8 +283,238 @@ public class MainFrame extends JFrame
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) 
-    {
+    // === Show Detail Page with Reviews ===
+    private void showDetail(Restaurant r, String username) {
+        JFrame detailFrame = new JFrame(r.getName() + " Details");
+        detailFrame.setSize(700, 600);
+        detailFrame.setLocationRelativeTo(null);
+
+        JLabel detailBg = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png")));
+        detailBg.setLayout(new BorderLayout());
+        detailFrame.setContentPane(detailBg);
+
+        JPanel content = new JPanel(new BorderLayout(20, 0));
+        content.setOpaque(false);
+        content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Left info
+        JPanel infoDetail = new JPanel();
+        infoDetail.setLayout(new BoxLayout(infoDetail, BoxLayout.Y_AXIS));
+        infoDetail.setOpaque(false);
+
+        JLabel nameDetail = new JLabel(r.getName());
+        nameDetail.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
+        JLabel addressDetail = new JLabel("Address: " + r.getAddress());
+        JLabel ratingDetail = new JLabel("Rating: " + r.getRating() + " ⭐");
+
+        String priceDetail;
+        switch (r.getPriceRange()) {
+            case "$": priceDetail = "Inexpensive"; break;
+            case "$$": priceDetail = "Moderate"; break;
+            case "$$$": priceDetail = "Expensive"; break;
+            case "$$$$": priceDetail = "Luxury"; break;
+            default: priceDetail = "Not specified";
+        }
+
+        JLabel descriptionLabel = new JLabel("<html><body style='width: 250px;'>Cuisines: " + String.join(", ", r.getCuisines()) +
+                "<br>Dining Type: " + r.getDiningType() +
+                "<br>Price Range: " + priceDetail +
+                "<br>Hours: " + r.getHours() +
+                "<br>Phone: " + r.getPhone() +
+                "<br>Email: " + r.getEmail() + "</body></html>");
+
+        infoDetail.add(nameDetail);
+        infoDetail.add(Box.createVerticalStrut(10));
+        infoDetail.add(addressDetail);
+        infoDetail.add(Box.createVerticalStrut(5));
+        infoDetail.add(ratingDetail);
+        infoDetail.add(Box.createVerticalStrut(5));
+        infoDetail.add(descriptionLabel);
+
+        content.add(infoDetail, BorderLayout.WEST);
+
+        // Right image
+        try {
+            ImageIcon icon = new ImageIcon(getClass().getResource("/resources/restaurant_images/" + r.getId() + ".jpg"));
+            Image img = icon.getImage();
+            int newWidth = 250;
+            int newHeight = (img.getHeight(null) * newWidth) / img.getWidth(null);
+            Image scaledImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            JLabel imgLabel = new JLabel(new ImageIcon(scaledImg));
+            content.add(imgLabel, BorderLayout.EAST);
+        } catch (Exception ex) {
+            System.out.println("Image not found for " + r.getName());
+        }
+
+        // === Review Panel ===
+        JPanel reviewPanel = new JPanel();
+        reviewPanel.setLayout(new BoxLayout(reviewPanel, BoxLayout.Y_AXIS));
+        reviewPanel.setOpaque(false);
+        reviewPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Text area
+        JTextArea reviewBox = new JTextArea();
+        reviewBox.setLineWrap(true);
+        reviewBox.setWrapStyleWord(true);
+        reviewBox.setRows(3);
+        reviewBox.setBackground(new Color(255, 182, 193));
+        reviewBox.setText(username + ", ready to share your thoughts?");
+        JScrollPane reviewScroll = new JScrollPane(reviewBox);
+        reviewScroll.setPreferredSize(new Dimension(400, 70));
+        reviewScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        reviewPanel.add(reviewScroll);
+        reviewPanel.add(Box.createVerticalStrut(5));
+
+        // Rating dropdown
+        String[] ratings = {"1⭐","2⭐⭐","3⭐⭐⭐","4⭐⭐⭐⭐","5⭐⭐⭐⭐⭐"};
+        JComboBox<String> ratingBox = new JComboBox<>(ratings);
+        ratingBox.setBackground(new Color(255, 182, 193));
+        ratingBox.setSelectedIndex(4);
+        reviewPanel.add(ratingBox);
+        reviewPanel.add(Box.createVerticalStrut(5));
+
+        // Submit button
+        JButton submitBtn = new JButton("Submit Review");
+        submitBtn.setBackground(new Color(255, 182, 193));
+        reviewPanel.add(submitBtn);
+        reviewPanel.add(Box.createVerticalStrut(10));
+
+        // Previous reviews
+        java.util.List<Review> reviews = reviewDAO.getReviewsByRestaurant(r.getId());
+
+        if (!reviews.isEmpty()) {
+            JLabel historyTitle = new JLabel("Previous Reviews");
+            historyTitle.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+            historyTitle.setForeground(new Color(139,0,139));
+            historyTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+            reviewPanel.add(historyTitle);
+            reviewPanel.add(Box.createVerticalStrut(5));
+
+            JPanel historyPanel = new JPanel();
+            historyPanel.setLayout(new BoxLayout(historyPanel, BoxLayout.Y_AXIS));
+            historyPanel.setOpaque(false);
+
+            for (Review rev : reviews) {
+                JPanel revPanel = new JPanel();
+                revPanel.setLayout(new BoxLayout(revPanel, BoxLayout.Y_AXIS));
+                revPanel.setBackground(new Color(255, 182, 193)); 
+                revPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+                JLabel userLabel = new JLabel(rev.getUsername() + " - " + rev.getRating() + " ⭐");
+                userLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+
+                JTextArea commentLabel = new JTextArea(rev.getComment());
+                commentLabel.setLineWrap(true);
+                commentLabel.setWrapStyleWord(true);
+                commentLabel.setEditable(false);
+                commentLabel.setBackground(new Color(255, 240, 245));
+
+                revPanel.add(userLabel);
+                revPanel.add(commentLabel);
+                revPanel.add(Box.createVerticalStrut(5));
+
+                historyPanel.add(revPanel);
+                historyPanel.add(Box.createVerticalStrut(5));
+            }
+
+            JScrollPane historyScroll = new JScrollPane(historyPanel);
+            historyScroll.setPreferredSize(new Dimension(400, 150));
+            historyScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            reviewPanel.add(historyScroll);
+        }
+
+        // Submit action
+        submitBtn.addActionListener(ev -> {
+            String comment = reviewBox.getText().trim();
+            int rating = ratingBox.getSelectedIndex() + 1;
+
+            if (comment.isEmpty() || comment.equals(username + ", ready to share your thoughts?")) {
+                JOptionPane.showMessageDialog(detailFrame, "Please enter a review.");
+                return;
+            }
+
+            String reviewId = UUID.randomUUID().toString();
+            Review newReview = new Review(reviewId, r.getId(), username, rating, comment);
+            reviewDAO.addReview(newReview);
+            reviews.add(newReview);
+
+            // Update average rating
+            double avg = reviews.stream().mapToInt(Review::getRating).average().orElse(0.0);
+            ratingDetail.setText(String.format("Rating: %.2f ⭐", avg));
+
+            // Reset input fields
+            reviewBox.setText(username + ", ready to share your thoughts?");
+            ratingBox.setSelectedIndex(4);
+
+            // Refresh previous reviews panel
+            reviewPanel.removeAll();
+
+            // Re-add input components
+            reviewPanel.add(reviewScroll);
+            reviewPanel.add(Box.createVerticalStrut(5));
+            reviewPanel.add(ratingBox);
+            reviewPanel.add(Box.createVerticalStrut(5));
+            reviewPanel.add(submitBtn);
+            reviewPanel.add(Box.createVerticalStrut(10));
+
+            // Add previous reviews if any
+            if (!reviews.isEmpty()) {
+                JLabel historyTitle = new JLabel("Previous Reviews");
+                historyTitle.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+                historyTitle.setForeground(new Color(139,0,139));
+                historyTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+                reviewPanel.add(historyTitle);
+                reviewPanel.add(Box.createVerticalStrut(5));
+
+                JPanel historyPanel = new JPanel();
+                historyPanel.setLayout(new BoxLayout(historyPanel, BoxLayout.Y_AXIS));
+                historyPanel.setOpaque(false);
+
+                for (Review rev : reviews) {
+                    JPanel revPanel = new JPanel();
+                    revPanel.setLayout(new BoxLayout(revPanel, BoxLayout.Y_AXIS));
+                    revPanel.setBackground(new Color(255, 240, 245));
+                    revPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+                    JLabel userLabel = new JLabel(rev.getUsername() + " - " + rev.getRating() + " ⭐");
+                    userLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+
+                    JTextArea commentLabel = new JTextArea(rev.getComment());
+                    commentLabel.setLineWrap(true);
+                    commentLabel.setWrapStyleWord(true);
+                    commentLabel.setEditable(false);
+                    commentLabel.setBackground(new Color(255, 240, 245));
+
+                    revPanel.add(userLabel);
+                    revPanel.add(commentLabel);
+                    revPanel.add(Box.createVerticalStrut(5));
+
+                    historyPanel.add(revPanel);
+                    historyPanel.add(Box.createVerticalStrut(5));
+                }
+
+                JScrollPane historyScroll = new JScrollPane(historyPanel);
+                historyScroll.setPreferredSize(new Dimension(400, 150));
+                historyScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                reviewPanel.add(historyScroll);
+            }
+
+            reviewPanel.revalidate();
+            reviewPanel.repaint();
+
+            JOptionPane.showMessageDialog(detailFrame, "Thanks! Your review was saved.");
+        });
+
+        content.add(reviewPanel, BorderLayout.SOUTH);
+
+        detailBg.add(content, BorderLayout.CENTER);
+        detailFrame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new MainFrame("User"));
     }
 }
+
+
+      
