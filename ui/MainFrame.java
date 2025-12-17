@@ -4,14 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
+import java.util.UUID;
 import javax.swing.Timer;
 
 public class MainFrame extends JFrame {
 
     private RestaurantDAO restaurantDAO;
     private ReviewDAO reviewDAO;
+    private String username;
 
     public MainFrame(String username) {
+        this.username = username;
         setTitle("Restaurant Advisor");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,6 +24,9 @@ public class MainFrame extends JFrame {
 
         restaurantDAO = new RestaurantDAO();
         reviewDAO = new ReviewDAO();
+
+        // Load all restaurants with user favorites
+        List<Restaurant> allRestaurants = restaurantDAO.getAllRestaurants(username);
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -34,6 +41,13 @@ public class MainFrame extends JFrame {
         welcomeLabel.setForeground(Color.BLACK);
         welcomeLabel.setBounds(50, 30, 700, 40);
         bgLabel.add(welcomeLabel);
+
+        // Favorites page button
+        JButton favPageBtn = new JButton("Favorites");
+        favPageBtn.setBounds(650, 30, 120, 40);
+        favPageBtn.setBackground(Color.PINK);
+        favPageBtn.addActionListener(e -> showFavorites(username, allRestaurants));
+        bgLabel.add(favPageBtn);
 
         // Cuisine buttons
         String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "American", "Japanese", "Vietnamese", "French", "Mediterranean", "Vegetarian", "Asian"};
@@ -108,7 +122,7 @@ public class MainFrame extends JFrame {
                 }
             });
 
-            btn.addActionListener(e -> showRestaurants(cuisine, username));
+            btn.addActionListener(e -> showRestaurants(cuisine, username, allRestaurants));
             bgLabel.add(btn);
             x += 140;
             if (x > 700) {
@@ -121,12 +135,12 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    private void showRestaurants(String cuisine, String username) {
-        java.util.List<Restaurant> originalList = restaurantDAO.getRestaurantsByCuisine(cuisine);
+    // === Reusable Restaurant List Frame ===
+    private void showRestaurantListFrame(List<Restaurant> restaurants, String title, String username, List<Restaurant> allRestaurants) {
         @SuppressWarnings("unchecked")
-        final java.util.List<Restaurant>[] currentList = new java.util.List[]{new ArrayList<>(originalList)};
+        final List<Restaurant>[] currentList = new List[]{new ArrayList<>(restaurants)};
 
-        JFrame frame = new JFrame(cuisine + " Restaurants");
+        JFrame frame = new JFrame(title);
         frame.setSize(650, 600);
         frame.setLocationRelativeTo(this);
 
@@ -177,9 +191,15 @@ public class MainFrame extends JFrame {
         sortAlphaBtn.setBackground(Color.WHITE);
         sortAlphaBtn.setPreferredSize(new Dimension(100, 30));
         topBar.add(sortAlphaBtn);
+        topBar.add(Box.createHorizontalStrut(10));
+
+        JCheckBox favOnlyCheck = new JCheckBox("Favorites Only");
+        favOnlyCheck.setBackground(new Color(255, 160, 180, 200));
+        topBar.add(favOnlyCheck);
 
         mainPanel.add(topBar, BorderLayout.NORTH);
 
+        // Restaurant list panel
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setOpaque(false);
@@ -189,15 +209,31 @@ public class MainFrame extends JFrame {
         scrollPane.setOpaque(false); 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        Runnable loadList = () -> {
+        // Load restaurants dynamically
+        Runnable[] loadListRef = new Runnable[1];
+        loadListRef[0] = () -> {
             listPanel.removeAll();
+
+            List<Restaurant> filteredList = new ArrayList<>(restaurants);
+
+            if (favOnlyCheck.isSelected()) {
+                filteredList.removeIf(r -> !r.isFavorite());
+            }
+
+            String keyword = searchField.getText().trim().toLowerCase();
+            if (!keyword.isEmpty()) {
+                filteredList.removeIf(r -> !r.getName().toLowerCase().contains(keyword));
+            }
+
+            currentList[0] = filteredList;
+
             for (Restaurant r : currentList[0]) {
                 JPanel card = new JPanel(new BorderLayout());
                 card.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
                 card.setBackground(new Color(255, 255, 255, 200));
                 card.setMaximumSize(new Dimension(600, 130));
 
-                // Left thumbnail
+                // Left image
                 try {
                     ImageIcon icon = new ImageIcon(getClass().getResource("/resources/restaurant_images/" + r.getId() + ".jpg"));
                     Image img = icon.getImage();
@@ -210,6 +246,7 @@ public class MainFrame extends JFrame {
                     System.out.println("Image not found for " + r.getName());
                 }
 
+                // Info panel
                 JPanel infoPanel = new JPanel();
                 infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
                 infoPanel.setOpaque(false);
@@ -231,7 +268,6 @@ public class MainFrame extends JFrame {
 
                 JButton detailBtn = new JButton("View Details");
                 detailBtn.setBackground(new Color(255, 182, 193));
-
                 detailBtn.addActionListener(ev -> showDetail(r, username));
 
                 infoPanel.add(name);
@@ -240,47 +276,65 @@ public class MainFrame extends JFrame {
                 infoPanel.add(Box.createVerticalStrut(5));
                 infoPanel.add(detailBtn);
 
+                // Favorite button on right
+                JButton favBtn = new JButton(r.isFavorite() ? "★" : "☆");
+                favBtn.setBackground(new Color(255, 182, 193));
+                favBtn.setFocusPainted(false);
+                favBtn.setPreferredSize(new Dimension(50, 50));
+                favBtn.addActionListener(ev -> {
+                    restaurantDAO.updateFavorite(username, r, allRestaurants);
+                    favBtn.setText(r.isFavorite() ? "★" : "☆");
+                    loadListRef[0].run();
+                });
+
+                JPanel rightPanel = new JPanel();
+                rightPanel.setOpaque(false);
+                rightPanel.setLayout(new BorderLayout());
+                rightPanel.add(favBtn, BorderLayout.NORTH);
+
                 card.add(infoPanel, BorderLayout.CENTER);
+                card.add(rightPanel, BorderLayout.EAST);
+
                 listPanel.add(card);
                 listPanel.add(Box.createVerticalStrut(10));
             }
+
             listPanel.revalidate();
             listPanel.repaint();
         };
 
-        loadList.run();
-
-        searchBtn.addActionListener(e -> {
-            String keyword = searchField.getText().trim().toLowerCase();
-            if (keyword.isEmpty()) {
-                currentList[0] = new ArrayList<>(originalList);
-            } else {
-                java.util.List<Restaurant> filtered = new ArrayList<>();
-                for (Restaurant r : originalList) {
-                    if (r.getName().toLowerCase().contains(keyword)) filtered.add(r);
-                }
-                currentList[0] = filtered;
-            }
-            loadList.run();
+        searchBtn.addActionListener(e -> loadListRef[0].run());
+        sortHighBtn.addActionListener(e -> { 
+            currentList[0].sort((a, b) -> Double.compare(b.getRating(), a.getRating())); 
+            loadListRef[0].run(); 
         });
-
-        sortHighBtn.addActionListener(e -> {
-            currentList[0].sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
-            loadList.run();
+        sortLowBtn.addActionListener(e -> { 
+            currentList[0].sort(Comparator.comparingDouble(Restaurant::getRating)); 
+            loadListRef[0].run(); 
         });
-
-        sortLowBtn.addActionListener(e -> {
-            currentList[0].sort(Comparator.comparingDouble(Restaurant::getRating));
-            loadList.run();
+        sortAlphaBtn.addActionListener(e -> { 
+            currentList[0].sort(Comparator.comparing(Restaurant::getName, String.CASE_INSENSITIVE_ORDER)); 
+            loadListRef[0].run(); 
         });
+        favOnlyCheck.addActionListener(e -> loadListRef[0].run());
 
-        sortAlphaBtn.addActionListener(e -> {
-            currentList[0].sort(Comparator.comparing(Restaurant::getName, String.CASE_INSENSITIVE_ORDER));
-            loadList.run();
-        });
+        loadListRef[0].run();
 
         bgLabel.add(mainPanel);
         frame.setVisible(true);
+    }
+
+    private void showRestaurants(String cuisine, String username, List<Restaurant> allRestaurants) {
+        List<Restaurant> cuisineRestaurants = restaurantDAO.getRestaurantsByCuisine(cuisine, username);
+        showRestaurantListFrame(cuisineRestaurants, cuisine + " Restaurants", username, allRestaurants);
+    }
+
+    private void showFavorites(String username, List<Restaurant> allRestaurants) {
+        List<Restaurant> favorites = new ArrayList<>();
+        for (Restaurant r : allRestaurants) {
+            if (r.isFavorite()) favorites.add(r);
+        }
+        showRestaurantListFrame(favorites, "Your Favorites", username, allRestaurants);
     }
 
     // === Show Detail Page with Reviews ===

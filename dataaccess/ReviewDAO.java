@@ -1,72 +1,64 @@
 package dataaccess;
 
-import model.Restaurant;
+import model.Review;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RestaurantDAO 
-{
-    private String filePath = "data/restaurant.txt";
+public class ReviewDAO {
 
-    public List<Restaurant> getAllRestaurants() 
-    {
-        List<Restaurant> restaurants = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) 
-        {
+    private String filePath = "data/reviews.txt";
+
+    // Get all reviews for a specific restaurant
+    public List<Review> getReviewsByRestaurant(String restaurantId) {
+        List<Review> reviews = new ArrayList<>();
+        File file = new File(filePath);
+        if (!file.exists()) return reviews; // file not found yet
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = br.readLine(); // skip header
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
 
-            while ((line = br.readLine()) != null) 
-            {
-                if (line.trim().isEmpty()) continue; // skip empty lines
+                String[] parts = line.split("\\|", 5);
+                if (parts.length < 5) continue;
 
-                String[] parts = line.split("\\|");
-
-                if (parts.length < 10) continue;
-
-                String id = parts[0];
-                String name = parts[1];
-                String address = parts[2];
-                String phone = parts[3];
-                String email = parts[4];
-                String hours = parts[5];
-                List<String> cuisines = Arrays.asList(parts[6].split(","));
-                String diningType = parts[7];
-                String priceRange = parts[8];
-                double rating = 0.0;
-                try 
-                {
-                    rating = Double.parseDouble(parts[9]);
-                } 
-                catch (NumberFormatException e) 
-                {
-                    rating = 0.0; // default if missing or invalid
+                if (parts[1].equals(restaurantId)) {
+                    reviews.add(new Review(
+                            parts[0],
+                            parts[1],
+                            parts[2],
+                            Integer.parseInt(parts[3]),
+                            parts[4]
+                    ));
                 }
-
-                restaurants.add(new Restaurant(id, name, address, phone, email, hours, cuisines, diningType, priceRange, rating));
             }
-        } 
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return restaurants;
+        return reviews;
     }
 
-    // New method to filter restaurants by cuisine
-    public List<Restaurant> getRestaurantsByCuisine(String cuisine) 
-    {   
-        List<Restaurant> filtered = new ArrayList<>();
-        for (Restaurant r : getAllRestaurants()) 
-        {
-            for (String c : r.getCuisines()) 
-            {
-                if (c.trim().equalsIgnoreCase(cuisine)) 
-                {
-                    filtered.add(r);
-                    break;
-                }
+    // Add a new review
+    public void addReview(Review review) {
+        File file = new File(filePath);
+        boolean writeHeader = !file.exists();
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
+            if (writeHeader) {
+                bw.write("ReviewID|RestaurantID|Username|Rating|Comment");
+                bw.newLine();
             }
+            bw.write(
+                    review.getReviewId() + "|" +
+                    review.getRestaurantId() + "|" +
+                    review.getUsername() + "|" +
+                    review.getRating() + "|" +
+                    review.getComment()
+            );
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return filtered;
     }
 }

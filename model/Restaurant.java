@@ -14,9 +14,10 @@ public class Restaurant
     private String diningType;
     private String priceRange;
     private double rating;
+    private boolean isFavorite = false;
 
     public Restaurant(String id, String name, String address, String phone, String email,
-                      String hours, List<String> cuisines, String diningType, String priceRange, double rating) 
+                      String hours, List<String> cuisines, String diningType, String priceRange, double rating, boolean isFavorite) 
     {
         this.id = id;
         this.name = name;
@@ -28,6 +29,7 @@ public class Restaurant
         this.diningType = diningType;
         this.priceRange = priceRange;
         this.rating = rating;
+        this.isFavorite = false;
     }
 
     // Getters
@@ -91,4 +93,14 @@ public class Restaurant
     {
         return "resources/restaurant_images/" + id + ".jpg";
     } 
+
+    public boolean isFavorite() 
+    { 
+        return isFavorite; 
+    }
+
+    public void setFavorite(boolean favorite) 
+    { 
+        isFavorite = favorite; 
+    }
 }
