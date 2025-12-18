@@ -109,4 +109,13 @@ public class RestaurantDAO {
         }
         return list;
     }
+
+    // Get a restaurant by its ID
+    public Restaurant getRestaurantById(String id) {
+        for (Restaurant r : getAllRestaurants()) {
+            if (r.getId().equals(id)) return r;
+        }
+        return null; // not found
+    }
+
 }

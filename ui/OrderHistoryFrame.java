@@ -1,91 +1,78 @@
+import dataaccess.ReviewDAO;
+import dataaccess.RestaurantDAO;
+import model.Review;
+import model.Restaurant;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import dataaccess.OrderDAO;
-import dataaccess.FoodItemDAO;
-import model.Order;
-import model.FoodItem;
 
 public class OrderHistoryFrame extends JFrame {
 
     public OrderHistoryFrame(String username) {
-        setTitle(username + "'s Orders");
-        setSize(500, 600);
+
+        setTitle("My Order History");
+        setSize(600, 400);
         setLocationRelativeTo(null);
-        setResizable(false);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel mainPanel = new RoundedPanel(20, new Color(255, 182, 193));
-        mainPanel.setLayout(new BorderLayout(10, 10));
-        add(mainPanel);
+        // 🌸 Background panel
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBackground(new Color(255, 240, 245)); // light pink
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        JLabel title = new JLabel("Order History", SwingConstants.CENTER);
-        title.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-        mainPanel.add(title, BorderLayout.NORTH);
+        // 🌸 Title panel (emoji + text)
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        titlePanel.setBackground(new Color(255, 182, 193));
 
-        JPanel ordersPanel = new JPanel();
-        ordersPanel.setLayout(new BoxLayout(ordersPanel, BoxLayout.Y_AXIS));
-        ordersPanel.setBackground(new Color(255, 240, 245));
-        ordersPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        mainPanel.add(new JScrollPane(ordersPanel), BorderLayout.CENTER);
+        JLabel emojiLabel = new JLabel("🍽️");
+        emojiLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 22));
 
-        OrderDAO orderDAO = new OrderDAO();
-        FoodItemDAO foodDAO = new FoodItemDAO();
-        List<Order> orders = orderDAO.getOrdersByUsername(username);
+        JLabel textLabel = new JLabel("My Order History");
+        textLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
+        textLabel.setForeground(Color.BLACK);
 
-        for (Order o : orders) {
-            JPanel orderPanel = new RoundedPanel(15, Color.WHITE);
-            orderPanel.setLayout(new BoxLayout(orderPanel, BoxLayout.Y_AXIS));
-            orderPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        titlePanel.add(emojiLabel);
+        titlePanel.add(textLabel);
 
-            JLabel restaurant = new JLabel("Restaurant: " + o.getRestaurantId());
-            JLabel total = new JLabel("Total: $" + o.getTotalPrice());
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
 
-            // Display food item names
-            StringBuilder itemsText = new StringBuilder("Items: ");
-            FoodItem food = foodDAO.getAllFoodItems().stream()
-                    .filter(f -> f.getId().equals(o.getFoodId()))
-                    .findFirst().orElse(null);
-            if (food != null) {
-                itemsText.append(food.getName()).append(" x").append(o.getQuantity());
-            }
+        // 🌸 Table
+        String[] columns = {"Restaurant", "Rating", "Review"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+        JTable table = new JTable(model);
 
-            JLabel itemsLabel = new JLabel(itemsText.toString());
+        table.setRowHeight(28);
+        table.setFont(new Font("Comic Sans MS", Font.PLAIN, 13));
+        table.getTableHeader().setFont(new Font("Comic Sans MS", Font.BOLD, 14));
+        table.getTableHeader().setBackground(new Color(255, 182, 193));
 
-            JButton viewMenu = new JButton("View Menu");
-            viewMenu.setBackground(new Color(255, 182, 193));
-            viewMenu.setForeground(Color.BLACK);
-            viewMenu.setFocusPainted(false);
-            viewMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            viewMenu.addActionListener(e -> new MenuFrame(o.getRestaurantId(), "Restaurant Menu", "", "", "", username));
+        JScrollPane scrollPane = new JScrollPane(table);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-            orderPanel.add(restaurant);
-            orderPanel.add(itemsLabel);
-            orderPanel.add(total);
-            orderPanel.add(viewMenu);
-            orderPanel.add(Box.createVerticalStrut(5));
+        // 🌸 Load data
+        ReviewDAO reviewDAO = new ReviewDAO();
+        RestaurantDAO restaurantDAO = new RestaurantDAO();
 
-            ordersPanel.add(orderPanel);
-            ordersPanel.add(Box.createVerticalStrut(10));
+        List<Review> reviews = reviewDAO.getReviewsByUser(username);
+
+        for (Review r : reviews) {
+            Restaurant rest = restaurantDAO.getRestaurantById(r.getRestaurantId());
+            String restaurantName = (rest != null) ? rest.getName() : "Unknown";
+
+            model.addRow(new Object[]{
+                    restaurantName,
+                    r.getRating(),
+                    r.getComment()
+            });
         }
 
+        add(mainPanel);
         setVisible(true);
     }
 
-    class RoundedPanel extends JPanel {
-        private int radius;
-        private Color bgColor;
-        public RoundedPanel(int radius, Color bgColor) {
-            this.radius = radius;
-            this.bgColor = bgColor;
-            setOpaque(false);
-        }
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(bgColor);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
-            super.paintComponent(g);
-        }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new OrderHistoryFrame("User"));
     }
 }

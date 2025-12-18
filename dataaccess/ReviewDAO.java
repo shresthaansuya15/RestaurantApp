@@ -61,4 +61,34 @@ public class ReviewDAO {
             e.printStackTrace();
         }
     }
+
+    // Get all reviews made by a specific user
+    public List<Review> getReviewsByUser(String username) {
+        List<Review> reviews = new ArrayList<>();
+        File file = new File(filePath);
+        if (!file.exists()) return reviews;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line = br.readLine(); // skip header
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split("\\|", 5);
+                if (parts.length < 5) continue;
+
+                if (parts[2].equals(username)) { // username is at index 2
+                    reviews.add(new Review(
+                            parts[0], // ReviewID
+                            parts[1], // RestaurantID
+                            parts[2], // Username
+                            Integer.parseInt(parts[3]), // Rating
+                            parts[4]  // Comment
+                    ));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return reviews;
+    }
 }

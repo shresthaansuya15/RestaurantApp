@@ -172,19 +172,9 @@ public class MenuFrame extends JFrame {
         JButton checkoutBtn = createRoundedButton("Checkout");
         checkoutBtn.addActionListener(e -> checkout(username, restaurantId));
 
-        // Order History button
-        JButton historyBtn = createRoundedButton("Order History");
-        historyBtn.addActionListener(e -> new OrderHistoryFrame(username));
-
-        // Profile button
-        JButton profileBtn = createRoundedButton("Profile");
-        profileBtn.addActionListener(e -> new ProfileFrame(username));
-
         cartPanel.add(itemCountLabel);
         cartPanel.add(totalLabel);
         cartPanel.add(checkoutBtn);
-        cartPanel.add(historyBtn);
-        cartPanel.add(profileBtn);
         mainPanel.add(cartPanel, BorderLayout.SOUTH);
 
         setVisible(true);

@@ -28,13 +28,9 @@ public class MainFrame extends JFrame {
         // Load all restaurants with user favorites
         List<Restaurant> allRestaurants = restaurantDAO.getAllRestaurants(username);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-        panel.setBackground(new Color(255, 182, 193));
-
         JLabel bgLabel = new JLabel(new ImageIcon(getClass().getResource("/resources/backgrounds/main_bg.png")));
-        bgLabel.setBounds(0, 0, 800, 600);
-        panel.add(bgLabel);
+        bgLabel.setLayout(null);
+        setContentPane(bgLabel);
 
         // === Top Panel ===
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -82,7 +78,7 @@ public class MainFrame extends JFrame {
 
         String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "American", "Japanese", 
                              "Vietnamese", "French", "Mediterranean", "Vegetarian", "Asian"};
-        int x = 50, y = 150;
+        int x = 20, y = 20;
 
         for (String cuisine : cuisines) {
             ImageIcon icon = null;
@@ -154,15 +150,14 @@ public class MainFrame extends JFrame {
             });
 
             btn.addActionListener(e -> showRestaurants(cuisine, username, allRestaurants));
-            bgLabel.add(btn);
+            cuisinePanel.add(btn);
             x += 140;
-            if (x > 700) {
-                x = 50;
+            if (x + 120 > cuisinePanel.getWidth()) {
+                x = 20;
                 y += 100;
             }
         }
 
-        add(panel);
         setVisible(true);
     }
 
