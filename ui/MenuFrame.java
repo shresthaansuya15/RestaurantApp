@@ -4,68 +4,39 @@ import model.Order;
 import dataaccess.OrderDAO;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.List;
 
-// Custom Rounded Button
-class RoundedButton extends JButton {
-    private int radius;
-
-    public RoundedButton(String text, int radius) {
-        super(text);
-        this.radius = radius;
-        setContentAreaFilled(false);
-        setFocusPainted(false);
-        setForeground(Color.BLACK);
-        setBackground(new Color(255, 182, 193)); // light pink
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
-        super.paintComponent(g2);
-        g2.dispose();
-    }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(getBackground());
-        g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, radius, radius);
-        g2.dispose();
-    }
-}
-
+@SuppressWarnings("unused")
 public class MenuFrame extends JFrame {
     private Map<FoodItem, Integer> cart = new HashMap<>();
     private JLabel totalLabel;
+    private JLabel itemCountLabel;
+    private JPanel cartPanel;
 
     public MenuFrame(String restaurantId, String restaurantName, String address,
                      String diningType, String hours, String username) {
 
         setTitle("Menu - " + restaurantName);
-        setSize(480, 600);
+        setSize(480, 650);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBackground(new Color(255, 182, 193));
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(255, 182, 193)); // pastel pink
+        add(mainPanel);
 
         // Top panel for restaurant info
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        topPanel.setPreferredSize(new Dimension(450, 140));
 
-        // Restaurant Image
+        // Left: restaurant image
         try {
             ImageIcon icon = new ImageIcon(getClass().getResource("/resources/restaurant_images/" + restaurantId + ".jpg"));
             Image img = icon.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
@@ -75,7 +46,7 @@ public class MenuFrame extends JFrame {
             System.out.println("Image not found for restaurant " + restaurantId);
         }
 
-        // Restaurant Details
+        // Right: restaurant info
         JPanel infoPanel = new JPanel();
         infoPanel.setOpaque(false);
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
@@ -99,89 +70,143 @@ public class MenuFrame extends JFrame {
         // Menu Panel
         JPanel menuPanel = new JPanel();
         menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
-        menuPanel.setOpaque(false);
+        menuPanel.setBackground(new Color(255, 240, 245));
         menuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         FoodItemDAO dao = new FoodItemDAO();
         List<FoodItem> menu = dao.getFoodItemsByRestaurant(restaurantId);
 
+        int addButtonWidth = 70; // fixed width for alignment
         for (FoodItem item : menu) {
-            JPanel row = new JPanel(new GridBagLayout());
-            row.setBackground(Color.WHITE);
-            row.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Color.PINK, 1, true),
-                    BorderFactory.createEmptyBorder(10, 10, 10, 10)
-            ));
-
+            JPanel row = new RoundedPanel(15, Color.WHITE);
+            row.setMaximumSize(new Dimension(420, 60));
+            row.setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(0, 5, 0, 5);
+            gbc.insets = new Insets(5, 10, 5, 10);
             gbc.anchor = GridBagConstraints.WEST;
 
-            JLabel itemName = new JLabel(item.getName());
-            itemName.setFont(new Font("Arial", Font.BOLD, 14));
+            JLabel name = new JLabel(item.getName());
+            name.setFont(new Font("Arial", Font.BOLD, 14));
             gbc.gridx = 0;
-            gbc.weightx = 0.5;
+            gbc.weightx = 1;
             gbc.fill = GridBagConstraints.HORIZONTAL;
-            row.add(itemName, gbc);
+            row.add(name, gbc);
 
             JLabel price = new JLabel("$" + item.getPrice());
             price.setFont(new Font("Arial", Font.PLAIN, 13));
             gbc.gridx = 1;
             gbc.weightx = 0;
+            gbc.fill = GridBagConstraints.NONE;
             row.add(price, gbc);
 
-            SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 20, 1);
+            // Quantity selector starting at 0
+            SpinnerNumberModel model = new SpinnerNumberModel(0, 0, 20, 1);
             JSpinner qtySpinner = new JSpinner(model);
+            ((JSpinner.DefaultEditor) qtySpinner.getEditor()).getTextField().setColumns(2);
             gbc.gridx = 2;
             row.add(qtySpinner, gbc);
 
-            RoundedButton addBtn = new RoundedButton("Add", 20);
-            addBtn.setPreferredSize(new Dimension(70, 30));
+            // Add button
+            JButton addBtn = new JButton("Add") {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    if (getModel().isPressed()) {
+                        g2.setColor(new Color(255, 105, 180)); // darker pink on click
+                    } else if (getModel().isRollover()) {
+                        g2.setColor(new Color(255, 135, 180)); // hover
+                    } else {
+                        g2.setColor(new Color(255, 182, 193)); // normal light pink
+                    }
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                    super.paintComponent(g);
+                }
+
+                @Override
+                public void setBorder(Border border) {}
+            };
+            addBtn.setForeground(Color.BLACK);
+            addBtn.setFocusPainted(false);
+            addBtn.setContentAreaFilled(false);
+            addBtn.setOpaque(false);
+            addBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            addBtn.setPreferredSize(new Dimension(addButtonWidth, 30));
+
+            // Add to cart action
             addBtn.addActionListener(e -> {
                 int qty = (Integer) qtySpinner.getValue();
-                cart.put(item, qty);
+                if (qty == 0) {
+                    cart.remove(item);
+                } else {
+                    cart.put(item, qty);
+                }
                 updateTotal();
+                animateToCart(addBtn);
             });
+
             gbc.gridx = 3;
-            gbc.anchor = GridBagConstraints.EAST;
             row.add(addBtn, gbc);
 
-            row.setMaximumSize(new Dimension(420, 50));
             menuPanel.add(row);
-            menuPanel.add(Box.createVerticalStrut(8));
+            menuPanel.add(Box.createVerticalStrut(5));
         }
 
         JScrollPane scroll = new JScrollPane(menuPanel);
         scroll.setBorder(null);
-        scroll.getVerticalScrollBar().setUnitIncrement(10);
         mainPanel.add(scroll, BorderLayout.CENTER);
 
-        // Bottom panel for total and checkout
-        JPanel bottomPanel = new JPanel(null);
-        bottomPanel.setPreferredSize(new Dimension(450, 50));
-        bottomPanel.setOpaque(false);
+        // Cart summary panel
+        cartPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 5));
+        cartPanel.setOpaque(false);
+
+        itemCountLabel = new JLabel("<html>Cart is empty</html>");
+        itemCountLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 
         totalLabel = new JLabel("Total: $0.00");
         totalLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
-        totalLabel.setBounds(10, 10, 200, 30);
-        bottomPanel.add(totalLabel);
 
-        RoundedButton checkoutBtn = new RoundedButton("Checkout", 20);
-        checkoutBtn.setBounds(320, 10, 120, 30);
+        JButton checkoutBtn = new JButton("Checkout") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(255, 182, 193));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                super.paintComponent(g);
+            }
+
+            @Override
+            public void setBorder(Border border) {}
+        };
+        checkoutBtn.setForeground(Color.BLACK);
+        checkoutBtn.setFocusPainted(false);
+        checkoutBtn.setContentAreaFilled(false);
+        checkoutBtn.setOpaque(false);
+        checkoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         checkoutBtn.addActionListener(e -> checkout(username, restaurantId));
-        bottomPanel.add(checkoutBtn);
 
-        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+        cartPanel.add(itemCountLabel);
+        cartPanel.add(totalLabel);
+        cartPanel.add(checkoutBtn);
+        mainPanel.add(cartPanel, BorderLayout.SOUTH);
 
-        add(mainPanel);
         setVisible(true);
     }
 
+    // Update cart: show "1 x ItemName" and total
     private void updateTotal() {
         double total = 0;
+        StringBuilder cartText = new StringBuilder("<html>");
         for (Map.Entry<FoodItem, Integer> entry : cart.entrySet()) {
             total += entry.getKey().getPrice() * entry.getValue();
+            cartText.append(entry.getValue()).append(" x ").append(entry.getKey().getName()).append("<br>");
         }
+        if (cart.isEmpty()) {
+            cartText.append("Cart is empty");
+        }
+        cartText.append("</html>");
+        itemCountLabel.setText(cartText.toString());
         totalLabel.setText(String.format("Total: $%.2f", total));
     }
 
@@ -190,6 +215,9 @@ public class MenuFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Your cart is empty!");
             return;
         }
+
+        int confirm = JOptionPane.showConfirmDialog(this, "Confirm this order?", "Checkout", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) return;
 
         OrderDAO orderDAO = new OrderDAO();
         for (Map.Entry<FoodItem, Integer> entry : cart.entrySet()) {
@@ -206,5 +234,54 @@ public class MenuFrame extends JFrame {
         JOptionPane.showMessageDialog(this, "Order placed successfully!");
         cart.clear();
         updateTotal();
+    }
+
+    // Flying animation for add button
+    private void animateToCart(JButton button) {
+        JLayeredPane layeredPane = getLayeredPane();
+        Point start = SwingUtilities.convertPoint(button.getParent(), button.getLocation(), layeredPane);
+        Point end = SwingUtilities.convertPoint(cartPanel, new Point(cartPanel.getWidth() - 60, 10), layeredPane);
+
+        JLabel flying = new JLabel(button.getText());
+        flying.setOpaque(true);
+        flying.setBackground(new Color(255, 182, 193));
+        flying.setForeground(Color.BLACK);
+        flying.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        flying.setBounds(start.x, start.y, button.getWidth(), button.getHeight());
+        layeredPane.add(flying, JLayeredPane.POPUP_LAYER);
+
+        new Thread(() -> {
+            int steps = 30;
+            for (int i = 1; i <= steps; i++) {
+                int x = start.x + (end.x - start.x) * i / steps;
+                int y = start.y + (end.y - start.y) * i / steps;
+                SwingUtilities.invokeLater(() -> flying.setLocation(x, y));
+                try { Thread.sleep(15); } catch (InterruptedException ignored) {}
+            }
+            SwingUtilities.invokeLater(() -> layeredPane.remove(flying));
+            layeredPane.repaint();
+        }).start();
+    }
+
+    // Rounded panel for menu items
+    class RoundedPanel extends JPanel {
+        private int radius;
+        private Color bgColor;
+
+        public RoundedPanel(int radius, Color bgColor) {
+            super();
+            this.radius = radius;
+            this.bgColor = bgColor;
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(bgColor);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
+            super.paintComponent(g);
+        }
     }
 }

@@ -25,3 +25,6 @@ O023|john_doe|R001|F003|1|7.00|Pending
 O024|jane_smith|R002|F008|3|36.00|Completed
 O025|bob_k|R004|F017|1|3.50|Completed
 
+0c67c389-d2a0-423a-b3f0-9120bb0f361b|ansuya_s|R036|F176|1|7.50|Pending
+239ab7e4-fe2f-490c-81b3-33c9342f796e|ansuya_s|R011|F055|1|2.50|Pending
+59583cdf-056d-4861-9980-39918f1fb8ea|User|R002|F006|1|12.00|Pending
