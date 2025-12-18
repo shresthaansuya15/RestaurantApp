@@ -32,14 +32,7 @@ public class OrderHistoryFrame extends JFrame {
         emojiLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 24));
         emojiLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
-        // Text centered
-        JLabel textLabel = new JLabel("My Order History");
-        textLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
-        textLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        textLabel.setForeground(Color.BLACK);
-
         titlePanel.add(emojiLabel, BorderLayout.WEST);
-        titlePanel.add(textLabel, BorderLayout.CENTER);
 
         mainPanel.add(titlePanel, BorderLayout.NORTH);
 
