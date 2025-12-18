@@ -51,4 +51,17 @@ public class FoodItemDAO
         }
         return filtered;
     }
+
+    // NEW: Get a single food item by its ID
+    public FoodItem getFoodItemById(String id) 
+    {
+        for (FoodItem item : getAllFoodItems()) 
+        {
+            if (item.getId().equals(id)) 
+            {
+                return item;
+            }
+        }
+        return null; // not found
+    }
 }

@@ -1,29 +1,35 @@
 import dataaccess.FoodItemDAO;
+import dataaccess.OrderDAO;
+import dataaccess.CartDAO;
 import model.FoodItem;
 import model.Order;
-import dataaccess.OrderDAO;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class MenuFrame extends JFrame {
     private Map<FoodItem, Integer> cart = new HashMap<>();
     private JLabel totalLabel;
     private JLabel itemCountLabel;
     private JPanel cartPanel;
+    private CartDAO cartDAO = new CartDAO();
+    @SuppressWarnings("unused")
+    private String username;
+    @SuppressWarnings("unused")
+    private String restaurantId;
 
     public MenuFrame(String restaurantId, String restaurantName, String address,
                      String diningType, String hours, String username) {
 
+        this.username = username;
+        this.restaurantId = restaurantId;
+
         setTitle("Menu - " + restaurantName);
-        setSize(480, 650);
+        setSize(480, 700);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -36,7 +42,7 @@ public class MenuFrame extends JFrame {
         topPanel.setOpaque(false);
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Left: restaurant image
+        // Restaurant image
         try {
             ImageIcon icon = new ImageIcon(getClass().getResource("/resources/restaurant_images/" + restaurantId + ".jpg"));
             Image img = icon.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
@@ -46,7 +52,7 @@ public class MenuFrame extends JFrame {
             System.out.println("Image not found for restaurant " + restaurantId);
         }
 
-        // Right: restaurant info
+        // Info panel
         JPanel infoPanel = new JPanel();
         infoPanel.setOpaque(false);
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
@@ -73,10 +79,10 @@ public class MenuFrame extends JFrame {
         menuPanel.setBackground(new Color(255, 240, 245));
         menuPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        FoodItemDAO dao = new FoodItemDAO();
-        List<FoodItem> menu = dao.getFoodItemsByRestaurant(restaurantId);
+        FoodItemDAO foodDAO = new FoodItemDAO();
+        List<FoodItem> menu = foodDAO.getFoodItemsByRestaurant(restaurantId);
 
-        int addButtonWidth = 70; // fixed width for alignment
+        int addButtonWidth = 70; // fixed width
         for (FoodItem item : menu) {
             JPanel row = new RoundedPanel(15, Color.WHITE);
             row.setMaximumSize(new Dimension(420, 60));
@@ -99,7 +105,7 @@ public class MenuFrame extends JFrame {
             gbc.fill = GridBagConstraints.NONE;
             row.add(price, gbc);
 
-            // Quantity selector starting at 0
+            // Quantity selector (starts at 0)
             SpinnerNumberModel model = new SpinnerNumberModel(0, 0, 20, 1);
             JSpinner qtySpinner = new JSpinner(model);
             ((JSpinner.DefaultEditor) qtySpinner.getEditor()).getTextField().setColumns(2);
@@ -112,17 +118,12 @@ public class MenuFrame extends JFrame {
                 protected void paintComponent(Graphics g) {
                     Graphics2D g2 = (Graphics2D) g;
                     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                    if (getModel().isPressed()) {
-                        g2.setColor(new Color(255, 105, 180)); // darker pink on click
-                    } else if (getModel().isRollover()) {
-                        g2.setColor(new Color(255, 135, 180)); // hover
-                    } else {
-                        g2.setColor(new Color(255, 182, 193)); // normal light pink
-                    }
+                    if (getModel().isPressed()) g2.setColor(new Color(255, 105, 180));
+                    else if (getModel().isRollover()) g2.setColor(new Color(255, 135, 180));
+                    else g2.setColor(new Color(255, 182, 193));
                     g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
                     super.paintComponent(g);
                 }
-
                 @Override
                 public void setBorder(Border border) {}
             };
@@ -133,15 +134,16 @@ public class MenuFrame extends JFrame {
             addBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             addBtn.setPreferredSize(new Dimension(addButtonWidth, 30));
 
-            // Add to cart action
             addBtn.addActionListener(e -> {
                 int qty = (Integer) qtySpinner.getValue();
-                if (qty == 0) {
-                    cart.remove(item);
-                } else {
-                    cart.put(item, qty);
-                }
+                if (qty == 0) cart.remove(item);
+                else cart.put(item, qty);
                 updateTotal();
+
+                // Popup confirmation
+                if (qty > 0) JOptionPane.showMessageDialog(this,
+                        qty + "x " + item.getName() + " added!", "Confirm Order", JOptionPane.INFORMATION_MESSAGE);
+
                 animateToCart(addBtn);
             });
 
@@ -156,15 +158,21 @@ public class MenuFrame extends JFrame {
         scroll.setBorder(null);
         mainPanel.add(scroll, BorderLayout.CENTER);
 
-        // Cart summary panel
+        // Cart summary
         cartPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 5));
         cartPanel.setOpaque(false);
 
-        itemCountLabel = new JLabel("<html>Cart is empty</html>");
+        itemCountLabel = new JLabel("Items: 0");
         itemCountLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 14));
 
         totalLabel = new JLabel("Total: $0.00");
         totalLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+
+        JButton historyBtn = new JButton("Order History");
+        historyBtn.setForeground(Color.BLACK);
+        historyBtn.setBackground(new Color(255, 182, 193));
+        historyBtn.setFocusPainted(false);
+        historyBtn.addActionListener(e -> new OrderHistoryFrame(username));
 
         JButton checkoutBtn = new JButton("Checkout") {
             @Override
@@ -175,7 +183,6 @@ public class MenuFrame extends JFrame {
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
                 super.paintComponent(g);
             }
-
             @Override
             public void setBorder(Border border) {}
         };
@@ -188,26 +195,44 @@ public class MenuFrame extends JFrame {
 
         cartPanel.add(itemCountLabel);
         cartPanel.add(totalLabel);
+        cartPanel.add(historyBtn);
         cartPanel.add(checkoutBtn);
         mainPanel.add(cartPanel, BorderLayout.SOUTH);
+
+        // Load saved cart
+        loadSavedCart();
+
+        // Save cart on close
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cartDAO.saveCart(cart);
+                dispose();
+            }
+        });
 
         setVisible(true);
     }
 
-    // Update cart: show "1 x ItemName" and total
+    private void loadSavedCart() {
+        Map<String, Integer> savedCart = cartDAO.loadCart();
+        FoodItemDAO dao = new FoodItemDAO();
+        for (String id : savedCart.keySet()) {
+            FoodItem item = dao.getAllFoodItems().stream().filter(f -> f.getId().equals(id)).findFirst().orElse(null);
+            if (item != null) cart.put(item, savedCart.get(id));
+        }
+        updateTotal();
+    }
+
     private void updateTotal() {
         double total = 0;
-        StringBuilder cartText = new StringBuilder("<html>");
+        int count = 0;
         for (Map.Entry<FoodItem, Integer> entry : cart.entrySet()) {
             total += entry.getKey().getPrice() * entry.getValue();
-            cartText.append(entry.getValue()).append(" x ").append(entry.getKey().getName()).append("<br>");
+            count += entry.getValue();
         }
-        if (cart.isEmpty()) {
-            cartText.append("Cart is empty");
-        }
-        cartText.append("</html>");
-        itemCountLabel.setText(cartText.toString());
         totalLabel.setText(String.format("Total: $%.2f", total));
+        itemCountLabel.setText("Items: " + count);
     }
 
     private void checkout(String username, String restaurantId) {
@@ -216,27 +241,47 @@ public class MenuFrame extends JFrame {
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this, "Confirm this order?", "Checkout", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) return;
-
-        OrderDAO orderDAO = new OrderDAO();
+        // Build a message panel to show items and subtotal
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        double subtotal = 0;
         for (Map.Entry<FoodItem, Integer> entry : cart.entrySet()) {
-            Order order = new Order(UUID.randomUUID().toString(),
-                    username,
-                    restaurantId,
-                    entry.getKey().getId(),
-                    entry.getValue(),
-                    entry.getKey().getPrice() * entry.getValue(),
-                    "Pending");
-            orderDAO.addOrder(order);
+            String line = entry.getValue() + "x " + entry.getKey().getName() + " - $" + 
+                        String.format("%.2f", entry.getKey().getPrice() * entry.getValue());
+            subtotal += entry.getKey().getPrice() * entry.getValue();
+            JLabel label = new JLabel(line);
+            label.setFont(new Font("Arial", Font.PLAIN, 14));
+            panel.add(label);
         }
 
-        JOptionPane.showMessageDialog(this, "Order placed successfully!");
-        cart.clear();
-        updateTotal();
+        JLabel totalLabelConfirm = new JLabel("Subtotal: $" + String.format("%.2f", subtotal));
+        totalLabelConfirm.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+        totalLabelConfirm.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        panel.add(totalLabelConfirm);
+
+        int result = JOptionPane.showConfirmDialog(this, panel, 
+                        "Confirm Your Order", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.YES_OPTION) {
+            OrderDAO orderDAO = new OrderDAO();
+            for (Map.Entry<FoodItem, Integer> entry : cart.entrySet()) {
+                Order order = new Order(UUID.randomUUID().toString(),
+                        username,
+                        restaurantId,
+                        entry.getKey().getId(),
+                        entry.getValue(),
+                        entry.getKey().getPrice() * entry.getValue(),
+                        "Pending");
+                orderDAO.addOrder(order);
+            }
+
+            JOptionPane.showMessageDialog(this, "Order placed successfully!");
+            cart.clear();
+            updateTotal();
+        }
     }
 
-    // Flying animation for add button
     private void animateToCart(JButton button) {
         JLayeredPane layeredPane = getLayeredPane();
         Point start = SwingUtilities.convertPoint(button.getParent(), button.getLocation(), layeredPane);
@@ -263,18 +308,10 @@ public class MenuFrame extends JFrame {
         }).start();
     }
 
-    // Rounded panel for menu items
     class RoundedPanel extends JPanel {
         private int radius;
         private Color bgColor;
-
-        public RoundedPanel(int radius, Color bgColor) {
-            super();
-            this.radius = radius;
-            this.bgColor = bgColor;
-            setOpaque(false);
-        }
-
+        public RoundedPanel(int radius, Color bgColor) { super(); this.radius = radius; this.bgColor = bgColor; setOpaque(false);}
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g;

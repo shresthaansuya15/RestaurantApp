@@ -28,3 +28,8 @@ O025|bob_k|R004|F017|1|3.50|Completed
 0c67c389-d2a0-423a-b3f0-9120bb0f361b|ansuya_s|R036|F176|1|7.50|Pending
 239ab7e4-fe2f-490c-81b3-33c9342f796e|ansuya_s|R011|F055|1|2.50|Pending
 59583cdf-056d-4861-9980-39918f1fb8ea|User|R002|F006|1|12.00|Pending
+7d88e9cb-c359-4bb3-afa9-a17dfa514449|User|R006|F026|1|9.50|Pending
+99eae608-e8ff-417d-83d1-498a3a73c800|User|R035|F171|1|6.50|Pending
+97ab0765-de9b-44b0-98c1-fa476a972d49|User|R035|F172|1|7.50|Pending
+f9e54264-8fce-406f-847e-f3483d0fded4|User|R013|F061|1|8.00|Pending
+48635e86-1b7e-4c88-ba19-5a0f59096f6e|User|R013|F063|2|6.00|Pending

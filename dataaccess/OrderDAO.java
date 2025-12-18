@@ -34,7 +34,7 @@ public class OrderDAO
         return orders;
     }
 
-    public List<Order> getOrdersByUser(String username) 
+    public List<Order> getOrdersByUsername(String username) 
     {
         List<Order> all = getAllOrders();
         List<Order> filtered = new ArrayList<>();
