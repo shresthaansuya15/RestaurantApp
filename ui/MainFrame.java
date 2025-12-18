@@ -137,6 +137,7 @@ public class MainFrame extends JFrame {
 
     // === Reusable Restaurant List Frame ===
     private void showRestaurantListFrame(List<Restaurant> restaurants, String title, String username, List<Restaurant> allRestaurants) {
+        final String[] sortMode = { "NONE" };
         @SuppressWarnings("unchecked")
         final List<Restaurant>[] currentList = new List[]{new ArrayList<>(restaurants)};
 
@@ -225,6 +226,19 @@ public class MainFrame extends JFrame {
                 filteredList.removeIf(r -> !r.getName().toLowerCase().contains(keyword));
             }
 
+            // APPLY SORTING
+            switch (sortMode[0]) {
+                case "HIGH":
+                    filteredList.sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
+                    break;
+                case "LOW":
+                    filteredList.sort(Comparator.comparingDouble(Restaurant::getRating));
+                    break;
+                case "ALPHA":
+                    filteredList.sort(Comparator.comparing(Restaurant::getName, String.CASE_INSENSITIVE_ORDER));
+                    break;
+            }
+
             currentList[0] = filteredList;
 
             for (Restaurant r : currentList[0]) {
@@ -305,15 +319,15 @@ public class MainFrame extends JFrame {
 
         searchBtn.addActionListener(e -> loadListRef[0].run());
         sortHighBtn.addActionListener(e -> { 
-            currentList[0].sort((a, b) -> Double.compare(b.getRating(), a.getRating())); 
+            sortMode[0] = "HIGH";
             loadListRef[0].run(); 
         });
         sortLowBtn.addActionListener(e -> { 
-            currentList[0].sort(Comparator.comparingDouble(Restaurant::getRating)); 
+            sortMode[0] = "LOW";
             loadListRef[0].run(); 
         });
         sortAlphaBtn.addActionListener(e -> { 
-            currentList[0].sort(Comparator.comparing(Restaurant::getName, String.CASE_INSENSITIVE_ORDER)); 
+            sortMode[0] = "ALPHA";
             loadListRef[0].run(); 
         });
         favOnlyCheck.addActionListener(e -> loadListRef[0].run());
