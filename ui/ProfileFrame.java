@@ -15,7 +15,7 @@ public class ProfileFrame extends JFrame {
         this.userDAO = new UserDAO();
 
         setTitle("User Profile");
-        setSize(500, 480);
+        setSize(500, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -39,10 +39,15 @@ public class ProfileFrame extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // ===== Title =====
-        JLabel title = new JLabel("👋 Hi " + username + "!");
+        JLabel title = new JLabel("<html><center>👋 Hi " + username + "!</center></html>");
         title.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
         title.setForeground(new Color(139, 0, 139));
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setOpaque(true);
+        title.setBackground(new Color(255, 182, 193));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setPreferredSize(new Dimension(0, 60)); // enough height for emoji + text
+        title.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        title.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         mainPanel.add(title);
         mainPanel.add(Box.createVerticalStrut(20));
 
@@ -55,8 +60,12 @@ public class ProfileFrame extends JFrame {
         }
 
         // ===== Info Panel =====
-        JPanel infoPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel infoPanel = new JPanel(new GridBagLayout());
         infoPanel.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
 
         JLabel lblUsername = new JLabel("Username:");
         JLabel lblPassword = new JLabel("Password:");
@@ -66,7 +75,6 @@ public class ProfileFrame extends JFrame {
         JTextField txtUsername = new JTextField(user.getUsername());
         txtUsername.setEditable(false);
 
-        // 🔐 PASSWORD FIELD (CORRECT)
         JPasswordField txtPassword = new JPasswordField(user.getPassword());
         txtPassword.setEchoChar('•');
         txtPassword.setEditable(false);
@@ -83,16 +91,29 @@ public class ProfileFrame extends JFrame {
         txtFullName.setBackground(pink);
         txtEmail.setBackground(pink);
 
-        infoPanel.add(lblUsername);
-        infoPanel.add(txtUsername);
-        infoPanel.add(lblPassword);
-        infoPanel.add(txtPassword);
-        infoPanel.add(lblFullName);
-        infoPanel.add(txtFullName);
-        infoPanel.add(lblEmail);
-        infoPanel.add(txtEmail);
+        // Adding labels and fields to grid
+        gbc.gridx = 0; gbc.gridy = 0;
+        infoPanel.add(lblUsername, gbc);
+        gbc.gridx = 1;
+        infoPanel.add(txtUsername, gbc);
+
+        gbc.gridx = 0; gbc.gridy++;
+        infoPanel.add(lblPassword, gbc);
+        gbc.gridx = 1;
+        infoPanel.add(txtPassword, gbc);
+
+        gbc.gridx = 0; gbc.gridy++;
+        infoPanel.add(lblFullName, gbc);
+        gbc.gridx = 1;
+        infoPanel.add(txtFullName, gbc);
+
+        gbc.gridx = 0; gbc.gridy++;
+        infoPanel.add(lblEmail, gbc);
+        gbc.gridx = 1;
+        infoPanel.add(txtEmail, gbc);
 
         mainPanel.add(infoPanel);
+        mainPanel.add(Box.createVerticalStrut(10));
 
         // ===== Show / Hide Password Toggle =====
         JCheckBox showPassword = new JCheckBox("Show password");
@@ -100,13 +121,10 @@ public class ProfileFrame extends JFrame {
         showPassword.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
         showPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        showPassword.addActionListener(e -> {
-            txtPassword.setEchoChar(
+        showPassword.addActionListener(e -> txtPassword.setEchoChar(
                 showPassword.isSelected() ? (char) 0 : '•'
-            );
-        });
+        ));
 
-        mainPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(showPassword);
         mainPanel.add(Box.createVerticalStrut(20));
 
@@ -126,8 +144,7 @@ public class ProfileFrame extends JFrame {
             txtFullName.setEditable(true);
             txtEmail.setEditable(true);
             btnSave.setEnabled(true);
-            JOptionPane.showMessageDialog(this,
-                    "You can now edit your profile.");
+            JOptionPane.showMessageDialog(this, "You can now edit your profile.");
         });
 
         btnSave.addActionListener(e -> {
@@ -137,28 +154,24 @@ public class ProfileFrame extends JFrame {
 
             boolean updated = userDAO.updateUser(user);
             if (updated) {
-                JOptionPane.showMessageDialog(this,
-                        "Profile updated successfully!");
+                JOptionPane.showMessageDialog(this, "Profile updated successfully!");
                 txtPassword.setEditable(false);
                 txtFullName.setEditable(false);
                 txtEmail.setEditable(false);
                 btnSave.setEnabled(false);
             } else {
-                JOptionPane.showMessageDialog(this,
-                        "Failed to update profile.");
+                JOptionPane.showMessageDialog(this, "Failed to update profile.");
             }
         });
 
         buttonPanel.add(btnEdit);
         buttonPanel.add(btnSave);
-
         mainPanel.add(buttonPanel);
 
         add(mainPanel);
         setVisible(true);
     }
 
-    // ===== Optional test =====
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new ProfileFrame("User"));
     }

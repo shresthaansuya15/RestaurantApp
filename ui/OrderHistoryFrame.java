@@ -13,32 +13,37 @@ public class OrderHistoryFrame extends JFrame {
     public OrderHistoryFrame(String username) {
 
         setTitle("My Order History");
-        setSize(600, 400);
+        setSize(650, 450); // slightly bigger for spacing
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // 🌸 Background panel
+        // ===== Background panel =====
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBackground(new Color(255, 240, 245)); // light pink
+        mainPanel.setBackground(new Color(255, 240, 245));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // 🌸 Title panel (emoji + text)
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        // ===== Title panel =====
+        JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setBackground(new Color(255, 182, 193));
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
+        // Emoji on the left
         JLabel emojiLabel = new JLabel("🍽️");
-        emojiLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 22));
+        emojiLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 24));
+        emojiLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
+        // Text centered
         JLabel textLabel = new JLabel("My Order History");
         textLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 22));
+        textLabel.setHorizontalAlignment(SwingConstants.CENTER);
         textLabel.setForeground(Color.BLACK);
 
-        titlePanel.add(emojiLabel);
-        titlePanel.add(textLabel);
+        titlePanel.add(emojiLabel, BorderLayout.WEST);
+        titlePanel.add(textLabel, BorderLayout.CENTER);
 
         mainPanel.add(titlePanel, BorderLayout.NORTH);
 
-        // 🌸 Table
+        // ===== Table =====
         String[] columns = {"Restaurant", "Rating", "Review"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model);
@@ -51,12 +56,11 @@ public class OrderHistoryFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // 🌸 Load data
+        // ===== Load data =====
         ReviewDAO reviewDAO = new ReviewDAO();
         RestaurantDAO restaurantDAO = new RestaurantDAO();
 
         List<Review> reviews = reviewDAO.getReviewsByUser(username);
-
         for (Review r : reviews) {
             Restaurant rest = restaurantDAO.getRestaurantById(r.getRestaurantId());
             String restaurantName = (rest != null) ? rest.getName() : "Unknown";
