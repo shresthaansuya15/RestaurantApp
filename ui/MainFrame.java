@@ -5,7 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.Flow;
+
 import javax.swing.Timer;
 
 public class MainFrame extends JFrame {
@@ -268,7 +269,10 @@ public class MainFrame extends JFrame {
 
                 JLabel name = new JLabel(r.getName());
                 name.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+                name.setAlignmentX(Component.LEFT_ALIGNMENT);
+
                 JLabel ratingLabel = new JLabel("Rating: " + r.getRating() + " ⭐");
+                ratingLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 String priceText;
                 switch (r.getPriceRange()) {
@@ -279,16 +283,34 @@ public class MainFrame extends JFrame {
                     default: priceText = "Not specified";
                 }
                 JLabel priceLabel = new JLabel("Price: " + priceText);
+                priceLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 JButton detailBtn = new JButton("View Details");
                 detailBtn.setBackground(new Color(255, 182, 193));
                 detailBtn.addActionListener(ev -> showDetail(r, username));
 
+                JButton menuButton = new JButton("View Menu 🍽");
+                menuButton.setBackground(Color.PINK);
+
+                menuButton.addActionListener(e -> {
+                    new MenuFrame(
+                        r.getId(),
+                        r.getName(),
+                        username   // logged-in user
+                    );
+                });
+
+                JPanel buttonRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+                buttonRow.setOpaque(false);
+                buttonRow.add(detailBtn);
+                buttonRow.add(menuButton);
+                buttonRow.setAlignmentX(Component.LEFT_ALIGNMENT);
+
                 infoPanel.add(name);
                 infoPanel.add(ratingLabel);
                 infoPanel.add(priceLabel);
-                infoPanel.add(Box.createVerticalStrut(5));
-                infoPanel.add(detailBtn);
+                infoPanel.add(Box.createVerticalStrut(8));
+                infoPanel.add(buttonRow);
 
                 // Favorite button on right
                 JButton favBtn = new JButton(r.isFavorite() ? "★" : "☆");

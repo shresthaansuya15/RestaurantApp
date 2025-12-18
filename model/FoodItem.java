@@ -2,28 +2,28 @@ package model;
 
 public class FoodItem 
 {
+    private String id;
     private String restaurantId;
-    private String foodId;
     private String name;
     private double price;
 
-    public FoodItem(String restaurantId, String foodId, String name, double price) 
+    public FoodItem(String id, String restaurantId, String name, double price) 
     {
+        this.id = id;
         this.restaurantId = restaurantId;
-        this.foodId = foodId;
         this.name = name;
         this.price = price;
     }
 
     // Getters
-    public String getRestaurantId() 
+    public String getId() 
     { 
-        return restaurantId; 
+        return id; 
     }
 
-    public String getFoodId() 
+    public String getRestaurantId()  
     { 
-        return foodId; 
+        return restaurantId; 
     }
 
     public String getName() 
@@ -34,5 +34,11 @@ public class FoodItem
     public double getPrice() 
     { 
         return price; 
+    }
+
+    @Override
+    public String toString()
+    {
+        return name + " ($" + price + ")";
     }
 }

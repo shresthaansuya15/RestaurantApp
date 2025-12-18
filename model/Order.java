@@ -57,4 +57,10 @@ public class Order
     { 
         return status; 
     }
+
+    public String toFileString() 
+    {
+        return orderId + "|" + username + "|" + restaurantId + "|" + foodId + "|" +
+               quantity + "|" + totalPrice + "|" + status;
+    }
 }
