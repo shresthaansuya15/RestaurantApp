@@ -9,6 +9,7 @@ import java.util.concurrent.Flow;
 
 import javax.swing.Timer;
 
+@SuppressWarnings("unused")
 public class MainFrame extends JFrame {
 
     private RestaurantDAO restaurantDAO;
@@ -296,6 +297,9 @@ public class MainFrame extends JFrame {
                     new MenuFrame(
                         r.getId(),
                         r.getName(),
+                        r.getAddress(),
+                        r.getDiningType(),
+                        r.getHours(),
                         username   // logged-in user
                     );
                 });
