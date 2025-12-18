@@ -5,8 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.Flow;
-
 import javax.swing.Timer;
 
 @SuppressWarnings("unused")
@@ -38,22 +36,54 @@ public class MainFrame extends JFrame {
         bgLabel.setBounds(0, 0, 800, 600);
         panel.add(bgLabel);
 
+        // === Top Panel ===
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBounds(0, 20, 800, 100);
+
         JLabel welcomeLabel = new JLabel("Hi, " + username + "! What are you craving today?");
         welcomeLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
         welcomeLabel.setForeground(Color.BLACK);
-        welcomeLabel.setBounds(50, 30, 700, 40);
-        bgLabel.add(welcomeLabel);
+        welcomeLabel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
+        topPanel.add(welcomeLabel, BorderLayout.WEST);
 
-        // Favorites page button
-        JButton favPageBtn = new JButton("Favorites");
-        favPageBtn.setBounds(650, 30, 120, 40);
-        favPageBtn.setBackground(Color.PINK);
-        favPageBtn.addActionListener(e -> showFavorites(username, allRestaurants));
-        bgLabel.add(favPageBtn);
+        // Top-right buttons
+        JPanel topRightPanel = new JPanel();
+        topRightPanel.setLayout(new BoxLayout(topRightPanel, BoxLayout.Y_AXIS));
+        topRightPanel.setOpaque(false);
+        topRightPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        topRightPanel.setPreferredSize(new Dimension(180, 120));
 
-        // Cuisine buttons
-        String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "American", "Japanese", "Vietnamese", "French", "Mediterranean", "Vegetarian", "Asian"};
-        int x = 50, y = 100;
+        JButton profileBtn = createTopButton("Profile");
+        profileBtn.setMaximumSize(new Dimension(160, 40));
+        profileBtn.addActionListener(e -> new ProfileFrame(username));
+        topRightPanel.add(profileBtn);
+        topRightPanel.add(Box.createVerticalStrut(15));
+
+        JButton orderHistoryBtn = createTopButton("Order History");
+        orderHistoryBtn.setMaximumSize(new Dimension(160, 40));
+        orderHistoryBtn.addActionListener(e -> new OrderHistoryFrame(username));
+        topRightPanel.add(orderHistoryBtn);
+        topRightPanel.add(Box.createVerticalStrut(15));
+
+        JButton favBtn = createTopButton("Favorites");
+        favBtn.setMaximumSize(new Dimension(160, 40));
+        favBtn.addActionListener(e -> showFavorites(username, allRestaurants));
+        topRightPanel.add(favBtn);
+
+        topPanel.add(topRightPanel, BorderLayout.EAST);
+        bgLabel.add(topPanel);
+
+        // === Cuisine Buttons Panel ===
+        JPanel cuisinePanel = new JPanel(null);
+        cuisinePanel.setOpaque(false);
+        cuisinePanel.setBounds(50, 150, 700, 400);
+        bgLabel.add(cuisinePanel);
+
+        String[] cuisines = {"Indian", "Chinese", "Italian", "Mexican", "American", "Japanese", 
+                             "Vietnamese", "French", "Mediterranean", "Vegetarian", "Asian"};
+        int x = 50, y = 150;
+
         for (String cuisine : cuisines) {
             ImageIcon icon = null;
             try {
@@ -73,7 +103,6 @@ public class MainFrame extends JFrame {
             btn.setFocusPainted(false);
             btn.setBorder(BorderFactory.createLineBorder(Color.PINK, 2));
 
-            // Hover effect
             final Rectangle originalBounds = btn.getBounds();
             final int targetWidth = (int)(originalBounds.width * 1.2);
             final int targetHeight = (int)(originalBounds.height * 1.2);
@@ -135,6 +164,33 @@ public class MainFrame extends JFrame {
 
         add(panel);
         setVisible(true);
+    }
+
+    // Helper to create styled top buttons
+    private JButton createTopButton(String text) {
+        JButton btn = new JButton(text);
+        btn.setBackground(new Color(255, 182, 193));
+        btn.setForeground(Color.BLACK);
+        btn.setFocusPainted(false);
+        btn.setOpaque(true);
+        btn.setBorder(BorderFactory.createLineBorder(Color.PINK.darker(), 2, true));
+        btn.setPreferredSize(new Dimension(150, 40));
+        btn.setMaximumSize(new Dimension(160, 40));
+        return btn;
+    }
+
+    // === Show restaurants by cuisine ===
+    private void showRestaurants(String cuisine, String username, List<Restaurant> allRestaurants) {
+        List<Restaurant> cuisineRestaurants = restaurantDAO.getRestaurantsByCuisine(cuisine, username);
+        showRestaurantListFrame(cuisineRestaurants, cuisine + " Restaurants", username, allRestaurants);
+    }
+
+    private void showFavorites(String username, List<Restaurant> allRestaurants) {
+        List<Restaurant> favorites = new ArrayList<>();
+        for (Restaurant r : allRestaurants) {
+            if (r.isFavorite()) favorites.add(r);
+        }
+        showRestaurantListFrame(favorites, "Your Favorites", username, allRestaurants);
     }
 
     // === Reusable Restaurant List Frame ===
@@ -362,19 +418,6 @@ public class MainFrame extends JFrame {
 
         bgLabel.add(mainPanel);
         frame.setVisible(true);
-    }
-
-    private void showRestaurants(String cuisine, String username, List<Restaurant> allRestaurants) {
-        List<Restaurant> cuisineRestaurants = restaurantDAO.getRestaurantsByCuisine(cuisine, username);
-        showRestaurantListFrame(cuisineRestaurants, cuisine + " Restaurants", username, allRestaurants);
-    }
-
-    private void showFavorites(String username, List<Restaurant> allRestaurants) {
-        List<Restaurant> favorites = new ArrayList<>();
-        for (Restaurant r : allRestaurants) {
-            if (r.isFavorite()) favorites.add(r);
-        }
-        showRestaurantListFrame(favorites, "Your Favorites", username, allRestaurants);
     }
 
     // === Show Detail Page with Reviews ===
